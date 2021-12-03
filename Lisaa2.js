@@ -12,21 +12,53 @@ import { Input, Button, ListItem, Header, Avatar } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 
 
+import db from './komponentit/Tietokanta';
 
-const App = () => {
+const LisaaVaatekappale = ({ route, navigation }) => {
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
 
     const kategoriat = [
-        { kategoria: 'housut'},
-        { kategoria: 'takki'},
-        { kategoria: 'housut'},
-        { kategoria: 'kengat'},
-        { kategoria: 'pusero'},
-        { kategoria: 'hame'},
-        { kategoria: 'haalari'},
-        { kategoria: 'mekko'},
-        { kategoria: 'paita'},
-        { kategoria: 'mekko'},
+        { kategoria: 'housut', id:1},
+        { kategoria: 'takki', id:2},
+        { kategoria: 'pusero', id:5},
+        { kategoria: 'hame', id:6},
+        { kategoria: 'haalari', id:7},
+        { kategoria: 'mekko', id:8},
+        { kategoria: 'paita', id:9},
     ];
+    const [lapset, setLapset] = useState([]);
+
+    useEffect(() => {
+        ListaaLapset()
+      }, []);
+    
+      async function ListaaLapset() {
+        let lista = [];
+        const snapshot = await getDocs(collection(db, "lapset"));
+        snapshot.forEach((doc) => {
+            let uusiLapsi = { nimi: '', spaiva:''};
+            uusiLapsi.nimi = doc.id;
+            uusiLapsi.spaiva = doc.data().spaiva;    
+            lista = [...lista, uusiLapsi];
+        });
+        setLapset(lista);
+    };
+
+
+    let pvm = new Date();
+    let pvmSTR = pvm.getDate() +"."  + (pvm.getMonth()+1)+"." + pvm.getFullYear();
+    // console.log(pvmSTR);
+
+    async function postVaatekappale(data){
+        console.log('posting: ');        
+        let dataSTR = JSON.stringify(data);
+        console.log(dataSTR);
+       await addDoc(collection(db,'vaatekappaleet'),data);
+    }
+
 
     const formik = useFormik({
         initialValues: {
@@ -37,7 +69,15 @@ const App = () => {
             lisattypvm: '',
             vuodenajalle: ''
         },
-        onSubmit: values => { console.log(values) }
+        onSubmit: values => { 
+            console.log(values);
+            let pvm = new Date();
+            let pvmSTR = pvm.getDate() +"."  + (pvm.getMonth()+1)+"." + pvm.getFullYear();
+            console.log(pvmSTR);
+            values.lisattypvm = pvmSTR;
+            console.log(JSON.stringify(values));
+            postVaatekappale(values);
+         }
     });
     return (
         <View>
@@ -49,8 +89,22 @@ const App = () => {
                 selectedValue={formik.values.kategoria}
             >
                 {kategoriat.map((item) => <Picker.Item
-                        label={item.kategoria}
-                        value={item.kategoria}/>
+                        label={capitalizeFirstLetter(item.kategoria)}
+                        value={item.kategoria}
+                        key={item.id.toString()}/>
+                )}
+            </Picker>
+
+            <Picker
+                enabled={true}
+                mode="dropdown"
+                onValueChange={formik.handleChange('lapsi')}
+                selectedValue={formik.values.lapsi}
+            >
+                {lapset.map((item) => <Picker.Item
+                        label={item.nimi}
+                        value={item.nimi}
+                        key={item.nimi}/>
                 )}
             </Picker>
 
@@ -58,18 +112,14 @@ const App = () => {
                 enabled={true}
                 mode="dropdown"
                 onValueChange={formik.handleChange('vuodenajalle')}
-                selectedValue={formik.values.city_name}
+                selectedValue={formik.values.vuodenajalle}
             >
-                <Picker.Item label="Kaikki" value="kaikki" />
-                <Picker.Item label="Talvi" value="talvi" />
-                <Picker.Item label="Kesä" value="kesa" />
-                <Picker.Item label="Syksy ja kevät" value="syksy_kevat" />
+                <Picker.Item label="Kaikki" value="kaikki" id = "1" />
+                <Picker.Item label="Talvi" value="talvi"  id = "2" />
+                <Picker.Item label="Kesä" value="kesa"  id = "3" />
+                <Picker.Item label="Syksy ja kevät" value="syksy_kevat"  id = "4" />
             </Picker>
 
-            <Input
-                placeholder='Lapsen nimi'
-                onChangeText={formik.handleChange('lapsi')}
-            />
             <Input
                 placeholder='Maksimipituus'
                 onChangeText={formik.handleChange('pituudelle')}
@@ -78,7 +128,6 @@ const App = () => {
                 placeholder='kuvaus'
                 onChangeText={formik.handleChange('kuvaus')}
             />
-
             
             <Button
                 mode="contained"
@@ -90,4 +139,4 @@ const App = () => {
         </View>
     )
 }
-export default App;
+export default LisaaVaatekappale;

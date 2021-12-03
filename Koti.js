@@ -21,17 +21,11 @@ export default function Koti({ navigation }) {
     <View>
 
       <View>
-        <View>
-        <Text style={styles.kuvateksti}>Uusi vaatekappale</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Lisaa')} >      
-      <Image style = {styles.images} source ={lisaalogo}/>
-      </TouchableOpacity>
-      </View>
 
 
       
       <View>
-        <Text style={styles.kuvateksti}>Uusi vaatekappale2</Text>
+      <Text style={styles.kuvateksti}>Uusi vaatekappale</Text>
       <TouchableOpacity onPress={() => navigation.navigate('Lisaa2')} >      
       <Image style = {styles.images} source ={lisaalogo}/>
       </TouchableOpacity>
