@@ -76,10 +76,11 @@ export default function Haku({ route, navigation }) {
     const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
-      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '' };
+      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki:'' };
       uusiVaatekappale.id = doc.id;
       if (doc.data()) {
         uusiVaatekappale.lapsi = doc.data().lapsi;
+        console.log(doc.data.kategoria);
       } else {
         console.log("Ei löydy dokumenttia");
       }
@@ -96,6 +97,10 @@ export default function Haku({ route, navigation }) {
       if (doc.data()?.lisattypvm) {
         uusiVaatekappale.lisattypvm = doc.data().lisattypvm;
       }
+      if (doc.data()?.kuvalinkki) {
+        console.log('Olemassa kuvalinkki');
+        uusiVaatekappale.lisattypvm = doc.data().kuvalinkki;
+      }
 
       lista = [...lista, uusiVaatekappale];
     });
@@ -107,8 +112,6 @@ export default function Haku({ route, navigation }) {
     setVaatekappaleet([]);
     ListaaVaatteet()
   }
-
-
 
   const renderKaikki = ({ item }) => (
     
@@ -132,7 +135,7 @@ export default function Haku({ route, navigation }) {
 >
     
     <ListItem style={styles.listcontainer} bottomDivider>
-      <Avatar source={getAvatar(item)} style={{ width: 70, height: 70 }} />
+      <Avatar source={{ uri: item.kuvalinkki }} style={{ width: 70, height: 70 }} />
       <ListItem.Content>
         <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
         <View style={styles.listItemcontainer}>
@@ -143,6 +146,9 @@ export default function Haku({ route, navigation }) {
         </View>
         <View style={styles.listItemcontainer}>
           <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
+        </View>
+        <View style={styles.listItemcontainer}>
+          <ListItem.Subtitle>kuvalinkki: {item.kuvalinkki} </ListItem.Subtitle>
         </View>
       </ListItem.Content>
     </ListItem>
@@ -168,6 +174,17 @@ export default function Haku({ route, navigation }) {
       return outfit;
     }
   }
+function getAvatarKuvalla(item) {
+  console.log('getAvatarKuvalla');
+  console.log(item.kuvalinkki);
+  if(!item.kuvalinkki){
+    return getAvatar(item);
+  }else{
+    return { uri: item.kuvalinkki };
+  }
+  
+}
+
 
   async function deleteFromDatabase(id) {
     console.log('deleteting: ' + id);

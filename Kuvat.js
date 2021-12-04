@@ -1,72 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View,  Image } from 'react-native';
+import { Camera } from 'expo-camera';
+import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 
-import { initializeApp } from 'firebase/app';
-import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, getDoc, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
-import 'firebase/firestore';
+import styles from './styles';
 
-import * as ImagePicker from 'expo-image-picker';
+export default function Kuvat({ route, navigation }) {
+  const [hasCameraPermission, setPermission] = useState(null);
+  const [photoName, setPhotoName] = useState('');
 
-import db from './komponentit/Tietokanta';
-
-export default function ImagePickerExample({ route, navigation }) {
-  const [image, setImage] = useState(null);
+  const camera = useRef(null);
 
   useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    })();
+    askCameraPermission();
   }, []);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const askCameraPermission = async () => {
+    const { status } = await Camera.requestMicrophonePermissionsAsync();
+    setPermission(status == 'granted');
+  }
 
-    console.log(result);
-    console.log('Routeparameters', route.params.osoite);
-    <Button title="Route parameters" onPress={console.log(route.params.osoite)} />
-
-    if (!result.cancelled) {
-      setImage(result.uri);
+  const snap = async () => {
+    if (camera) {
+      const photo = await camera.current.takePictureAsync({ base64: true });
+      setPhotoName(photo.uri);
     }
   };
 
-
-  async function Asetakuva() {
-
-    const docRef = doc(db, "lapset", route.params.nimi);
-    await updateDoc(docRef,{
-      kuvalinkki: image
-    })
-
-  };
-
-
-
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.container}>
+      {hasCameraPermission ?
+        (
+          <View style={{ flex: 1 }}>
+            <Camera style={{ flex: 4 }} ref={camera} />
 
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-
-      <Button title="Takaisin" onPress={() => navigation.navigate(route.params.osoite)} />
-
-      <Button title="Route parameters" onPress={() => { console.log(route.params.nimi) }} />
-
-      <Button title="Route parameters" onPress={() => { console.log(image) }} />
-
-      <Button title="Aseta profiilikuvaksi" onPress={() => Asetakuva()} />
-
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-
+            <View style={styles.napitRivissa}>
+            <View>
+              <Button 
+              title="Ota kuva" onPress={snap} 
+              
+              icon={
+                <Icon
+                  name="camera"
+                  size={25}
+                  color="white"
+                />}
+            buttonStyle={{
+                backgroundColor: '#52738c',
+                borderWidth: 2,
+                borderColor: 'white',
+                borderRadius: 10,
+            }}
+            containerStyle={{
+                width: 170,//'40%'
+                marginTop:10,
+                marginRight:10, 
+                marginLeft:10
+            }}/>
+            </View>
+            <View>
+              <Button 
+              title="Tallenna kuva" 
+              onPress={() => navigation.navigate('Lisaa2',{uri:photoName})} 
+              icon={
+                <Icon
+                  name="camera"
+                  size={25}
+                  color="white"
+                />}
+            buttonStyle={{
+                backgroundColor: '#52738c',
+                borderWidth: 2,
+                borderColor: 'white',
+                borderRadius: 10,
+            }}
+            containerStyle={{
+                width: 170,
+                marginTop:10,
+                marginRight:10, 
+                marginLeft:10
+            }}/>
+            </View>
+            </View>
+            <View style={{ flex: 4 }}>
+              {
+                photoName
+                  ? <Image style={{ flex: 1 }} source={{ uri: photoName }} />
+                  : <Text style={{ flex: 1 }}>File</Text>
+              }
+            </View>
+          </View>
+        ) : (
+          <Text>No access to camera</Text>
+        )}
     </View>
   );
 }

@@ -1,28 +1,75 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Platform } from 'react-native';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, getDoc, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { Input, Button, ListItem, Header, Avatar } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
 
 
-
+import styles from './styles';
+import lisaa from './assets/lisaa.png';
+import mekko from './assets/mekko.png';
+import kukka from './assets/kukka.png';
+import lapsilogo from './assets/lapsilogo.png';
 import db from './komponentit/Tietokanta';
-import ImagePickerExample from './Kuvat';
+import { findFocusedRoute } from '@react-navigation/core';
+
 
 export default function Lapset({ navigation }) {
-
   const [lapset, setLapset] = useState([]);
-
-  const image = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/ImagePicker/5df339dc-6f81-46e4-a857-46553600bd35.jpg";
-
+  const [image, setImage] = useState(null);
   useEffect(() => {
     ListaaLapset()
   }, []);
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async (nimi) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });    
+
+    if (!result.cancelled) {
+      
+      Alert.alert('', 'Haluatko varmasti muuttaa kuvan?', [
+        {
+          text: "Ei",
+          onPress: () => null,
+          style: "cancel"
+         },
+         {
+          text: "Kyllä",          
+          onPress: () => Asetakuva(nimi, result.uri),
+         }
+        ]);
+      setImage(result.uri);
+    }
+  };
+
+  
+
+  async function Asetakuva(nimi, uri) {
+    console.log(uri);
+    const docRef = doc(db, "lapset", nimi);
+    await updateDoc(docRef,{
+    kuvalinkki: uri
+    })
+  };
 
   async function ListaaLapset() {
     let lista = [];
@@ -37,6 +84,25 @@ export default function Lapset({ navigation }) {
     setLapset(lista);
   };
 
+  function arvioituPituus(x) {
+    return Math.round(-0.0008*x*x+0.6195 *x + 66.6144);
+  }
+
+  function kuukausiIka(dateSTR){
+    let tanaan = new Date();
+    let vuodet = tanaan.getFullYear()-parseInt(dateSTR.substring(6,10));
+    let kuukaudet =12*vuodet +  tanaan.getMonth() + 1 - parseInt(dateSTR.substring(3,5));
+    let paivat = tanaan.getDate()-dateSTR.substring(0,2);
+    kuukaudet += Math.floor(paivat * 1.0 / 30);
+    return kuukaudet;
+  }
+
+  function laskeIka(dateSTR){
+    let kuukaudet = kuukausiIka(dateSTR);
+    let vuodet = Math.floor(kuukaudet/12);
+    kuukaudet = kuukaudet%12;
+    return vuodet + 'v ' + kuukaudet + 'kk'  ;
+  }
 
   const updateLapset = () => {
     setLapset([]);
@@ -48,6 +114,8 @@ export default function Lapset({ navigation }) {
     await deleteDoc(doc(db, 'lapset', id));
     updateLapset();
   }
+
+  
 
   const renderKaikki = ({ item }) => (
     <ListItem.Swipeable
@@ -69,40 +137,28 @@ export default function Lapset({ navigation }) {
       }
     >
       <ListItem style={styles.listcontainer} bottomDivider>
-        <Avatar rounded  source={{uri: item.kuvalinkki}} style={{ width: 70, height: 70 }} />
-        <ListItem.Content>
-          <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
-
-          <ListItem>
-            <Button title='Uusi kuva' onPress={() => navigation.navigate('Kuvat', { osoite: "Lapset", nimi: item.nimi })} />
-          </ListItem>
-        </ListItem.Content>
+        <TouchableOpacity onPress = {() => pickImage(item.nimi)}>
+        <Avatar rounded source={{ uri: item.kuvalinkki }} defaulSource={lapsilogo} style={{ width: 70, height: 70 }} />
+        </TouchableOpacity>         
+        
+        <View>        
+        <ListItem>
+        <View>
+        <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
+          <Text>Ikä: {laskeIka(item.spaiva)} {""}</Text>
+          <Text>Pituus: {arvioituPituus(kuukausiIka(item.spaiva))}cm</Text>
+          </View>
+        </ListItem>
+        
+        </View>
       </ListItem>
 
     </ListItem.Swipeable>
   );
 
-
   return (
     <View>
-
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-
-      {/* <View>
-        <Text>Koti</Text>
-        <Button title='Koti' onPress={() => navigation.navigate('Koti')} />
-        <Text>Haku</Text>
-        <Button title='Haku' onPress={() => navigation.navigate('Haku')} />
-        <Text>Lisaa</Text>
-        <Button title='Lapset' onPress={() => navigation.navigate('Lisaa2')} />
-        <Text>LisaaLapsi</Text>
-        <Button title='LisaaLapsi' onPress={() => navigation.navigate('LisaaLapsi')} />
-        <Text>Kuvat</Text>
-        <Button title='Kuvat' onPress={() => navigation.navigate('Kuvat', { osoite: "Lapset" })} />
-      </View> */}
-
-
-      <Text>Lapset</Text>
+      <Image source={kukka} style={styles.bannerImg} />
       <FlatList
         style={{ marginLeft: "5%" }}
         keyExtractor={(item) => item.nimi}
@@ -112,41 +168,6 @@ export default function Lapset({ navigation }) {
     </View>
   );
 }
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  listcontainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    alignItems: 'center'
-  },
-  listItemcontainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
