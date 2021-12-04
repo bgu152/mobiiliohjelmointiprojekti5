@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button  } from  'react-native-elements';
+import { Image, Platform } from 'react-native';
 
 export default function LisaaLapsi({navigation}) {
 return (
     <View>
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       <Text>Koti</Text>
       <Button title='Koti' onPress={() => navigation.navigate('Koti')} />
       <Text>Haku</Text>

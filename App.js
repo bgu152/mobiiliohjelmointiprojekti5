@@ -11,6 +11,7 @@ import Haku from './Haku';
 import Koti from './Koti';
 import Lapset from './Lapset';
 import LisaaLapsi from './LisaaLapsi';
+import Kuvat from './Kuvat';
 
 
 const Stack = createStackNavigator();
@@ -31,6 +32,7 @@ return (
         <Stack.Screen name = 'Lisaa2' component ={Lisaa2}/>
         <Stack.Screen name = 'Lapset' component ={Lapset}/>
         <Stack.Screen name = 'LisaaLapsi' component ={LisaaLapsi}/>
+        <Stack.Screen name = 'Kuvat' component ={Kuvat}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
