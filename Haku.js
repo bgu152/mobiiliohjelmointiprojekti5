@@ -21,6 +21,8 @@ import housut from './assets/housut.png';
 import mekko from './assets/mekko.png';
 
 export default function Haku({ route, navigation }) {
+  const uri = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/Camera/bbe4f2c7-57e3-4cac-afab-b8e3fe27af99.jpg";
+  const soossi = {uri:uri};
 
   const [nimiinput, setNimiinput] = useState('');
   const [kategoriainput, setKategoriainput] = useState('');
@@ -99,7 +101,9 @@ export default function Haku({ route, navigation }) {
       }
       if (doc.data()?.kuvalinkki) {
         console.log('Olemassa kuvalinkki');
-        uusiVaatekappale.lisattypvm = doc.data().kuvalinkki;
+        uusiVaatekappale.kuvalinkki = doc.data().kuvalinkki;
+        console.log('Tallenetaan kuvalinkki');
+        console.log(uusiVaatekappale.kuvalinkki);
       }
 
       lista = [...lista, uusiVaatekappale];
@@ -133,9 +137,8 @@ export default function Haku({ route, navigation }) {
     />
   }
 >
-    
     <ListItem style={styles.listcontainer} bottomDivider>
-      <Avatar source={{ uri: item.kuvalinkki }} style={{ width: 70, height: 70 }} />
+      <Avatar source= {getAvatarKuvalla(item)} style={{ width: 70, height: 70 }} />
       <ListItem.Content>
         <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
         <View style={styles.listItemcontainer}>
@@ -148,7 +151,7 @@ export default function Haku({ route, navigation }) {
           <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
         </View>
         <View style={styles.listItemcontainer}>
-          <ListItem.Subtitle>kuvalinkki: {item.kuvalinkki} </ListItem.Subtitle>
+          <Button titel ="testaa getAvatar" onPress = {()=> {console.log(getAvatarKuvalla(item))}}/>
         </View>
       </ListItem.Content>
     </ListItem>
@@ -177,13 +180,11 @@ export default function Haku({ route, navigation }) {
 function getAvatarKuvalla(item) {
   console.log('getAvatarKuvalla');
   console.log(item.kuvalinkki);
-  if(!item.kuvalinkki){
-    return getAvatar(item);
+  if(item.kuvalinkki){
+    return { uri: item.kuvalinkki }
   }else{
-    return { uri: item.kuvalinkki };
-  }
-  
-}
+    return getAvatar(item)}
+};
 
 
   async function deleteFromDatabase(id) {
@@ -196,7 +197,9 @@ function getAvatarKuvalla(item) {
     <SafeAreaView >
       
       <View>
-        <View >
+      <View style={styles.napitRivissa} >
+      <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vaatekategoria</Text></View>
+        <View style = {styles.pickerBoksi}>
           <Picker
             enabled={true}
             mode="dropdown"
@@ -211,8 +214,11 @@ function getAvatarKuvalla(item) {
             <Picker.Item label="Kaikki" value="" id="1" />
           </Picker>
         </View>
+        </View>
 
-        <View>
+        <View style={styles.napitRivissa} >
+      <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen</Text></View>
+        <View style = {styles.pickerBoksi}>
           <Picker
             style={styles.picker}          
             enabled={true}
@@ -227,28 +233,22 @@ function getAvatarKuvalla(item) {
             )}
             <Picker.Item label="Kaikki" value="" id="1" />
           </Picker>
+          </View>
         </View>
       </View>
       <Button
+      buttonStyle={{
+        backgroundColor: '#52738c',
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 5,
+    }}
         mode="contained"
         title='Hae'
         onPress={updateVaatekappaleet}
       >
         Enter
       </Button>
-
-
-
-
-      {/* <Button title='Hae vaatekappaleet' onPress={() => navigation.navigate('Koti')} />
-      <Text>Koti</Text>
-      <Button title='Koti' onPress={() => navigation.navigate('Koti')} />
-      <Text>Lisaa2</Text>
-      <Button title='Lisaa2' onPress={() => navigation.navigate('Lisaa2')} />
-      <Text>Lapset</Text>
-      <Button title='Lapset' onPress={() => navigation.navigate('Lapset')} />
-      <Text>LisaaLapsi</Text>
-      <Button title='LisaaLapsi' onPress={() => navigation.navigate('LisaaLapsi')} /> */}
       <FlatList
         style={{ marginLeft: "5%" }}
         renderItem={renderKaikki}

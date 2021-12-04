@@ -10,6 +10,7 @@ import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
 
 
+
 import styles from './styles';
 import lisaa from './assets/lisaa.png';
 import mekko from './assets/mekko.png';
@@ -20,6 +21,7 @@ import { findFocusedRoute } from '@react-navigation/core';
 
 
 export default function Lapset({ navigation }) {
+  const uri = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/Camera/bbe4f2c7-57e3-4cac-afab-b8e3fe27af99.jpg";
   const [lapset, setLapset] = useState([]);
   const [image, setImage] = useState(null);
   useEffect(() => {
@@ -119,13 +121,7 @@ export default function Lapset({ navigation }) {
 
   const renderKaikki = ({ item }) => (
     <ListItem.Swipeable
-      leftContent={
-        <Button
-          title="Muuta"
-          icon={{ name: 'update', color: 'white' }}
-          buttonStyle={{ minHeight: '100%' }}
-        />
-      }
+
       rightContent={
 
         <Button

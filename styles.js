@@ -34,7 +34,7 @@ export default styles = StyleSheet.create({
       height : 100,      
     },
     //for Lisaa text
-    selite: {
+    sivuotsikko: {
       fontSize: 25,
       textAlign: 'center',
       marginTop:10,
@@ -42,28 +42,30 @@ export default styles = StyleSheet.create({
 
     },
     picker:{
-      width: 250,
+      width: 150,
       height: 44,
       borderColor:'grey',
-      borderEndColor:1,
-      marginBottom:5,
     }, 
     pickerTeksti:{
       color:'grey',
-      fontSize:20,
+      fontSize:15,
     },
     pickertekstiBoksi:{
-      borderRightWidth:1,
-      borderRightColor:'#dadde1',
-      borderStyle:'solid',
-      borderTopColor:'#989ba0',
-      borderBottomWidth:0,
-      borderWidth:0
+      paddingTop:17,
+      flex:1,
 
     },
 
     napitRivissa: {
       flexDirection:'row',
-
+      alignContent:'flex-end'
+    },
+    
+    pickerBoksi:{
+      flex:1,      
+      paddingRight:70,
+      marginRight:10,
     }
+    
+
   });

@@ -57,12 +57,10 @@ const LisaaVaatekappale = ({ route, navigation }) => {
     let pvmSTR = pvm.getDate() + "." + (pvm.getMonth() + 1) + "." + pvm.getFullYear();
 
     async function postVaatekappale(data) {
-        try {
+        if (route.params.uri) {
             data.kuvalinkki = route.params.uri;
-          } catch (error) {
-            console.error(error);
-          }
-          
+        }
+
         console.log('posting: ');
         let dataSTR = JSON.stringify(data);
         console.log(dataSTR);
@@ -91,17 +89,21 @@ const LisaaVaatekappale = ({ route, navigation }) => {
     });
 
     return (
-        <View styel={styles.container}>
+        <View style={styles.container}>
 
             <Image source={lisaa} style={styles.bannerImg2} />
 
-            <Text style={styles.selite}>Lisää vaatekappale</Text>
+            <Text style={styles.sivuotsikko}>Tallenna uusi vaatekappale</Text>
 
-            <View><Text style={styles.pickerTeksti}>Valitse vaatekappalleen tyyppi</Text></View>
+            <View style={styles.napitRivissa} >
+
+            <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vaatekategoria</Text></View>
+
+            <View style = {styles.pickerBoksi}>
 
             <Picker
+                style={styles.picker}
                 enabled={true}
-                mode="dropdown"
                 onValueChange={formik.handleChange('kategoria')}
                 selectedValue={formik.values.kategoria}
             >
@@ -111,30 +113,34 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                     key={item.id.toString()} />
                 )}
             </Picker>
+            </View>
+            </View>
+            <View style={styles.napitRivissa}>
 
-            <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen vaatekappale?</Text></View>
-
-            <Picker
-                enabled={true}
-                mode="dropdown"
-                onValueChange={formik.handleChange('lapsi')}
-                selectedValue={formik.values.lapsi}
-            >
-                {lapset.map((item) => <Picker.Item
-                    label={item.nimi}
-                    value={item.nimi}
-                    key={item.nimi} />
-                )}
-            </Picker>
-            <View>
-
-                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Mille vuodenajalle?</Text></View>
-
-
+                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen: </Text></View>
+                    <View style = {styles.pickerBoksi}>
                 <Picker
                     style={styles.picker}
                     enabled={true}
-                    mode="dropdown"
+                    onValueChange={formik.handleChange('lapsi')}
+                    selectedValue={formik.values.lapsi}
+                >
+                    {lapset.map((item) => <Picker.Item
+                        label={item.nimi}
+                        value={item.nimi}
+                        key={item.nimi} />
+                    )}
+                </Picker>
+                </View>
+            </View>
+            <View style={styles.napitRivissa}>
+
+                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vuodenajalle:</Text></View>
+
+                        <View style = {styles.pickerBoksi}>
+                <Picker
+                    style={styles.picker}
+                    enabled={true}
                     onValueChange={formik.handleChange('vuodenajalle')}
                     selectedValue={formik.values.vuodenajalle}
                 >
@@ -143,15 +149,18 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                     <Picker.Item label="Kesä" value="kesa" id="3" />
                     <Picker.Item label="Syksy ja kevät" value="syksy_kevat" id="4" />
                 </Picker>
+                </View>
             </View>
-            <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Käyttäjän maksimipituus</Text></View>
 
+            <View>
+            
             <Input
+            style = {{paddingTop:20}}
                 placeholder='Maksimipituus (cm)'
                 onChangeText={formik.handleChange('pituudelle')}
                 keyboardType="numeric"
             />
-            <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kuvaus</Text></View>
+            </View>
             <Input
                 placeholder='Kuvaus'
                 onChangeText={formik.handleChange('kuvaus')}
@@ -159,67 +168,68 @@ const LisaaVaatekappale = ({ route, navigation }) => {
 
             <View style={styles.napitRivissa}>
 
-            <Button
-                title='Ota kuva'
-                onPress={() => navigation.navigate('Kuvat')}
-                icon={
-                    <Icon
-                      name="camera"
-                      size={25}
-                      color="white"
-                    />}
-                buttonStyle={{
-                    backgroundColor: '#52738c',
-                    borderWidth: 2,
-                    borderColor: 'white',
-                    borderRadius: 10,
-                }}
-                containerStyle={{
-                    width: 150,
-                    marginRight:10, 
-                    marginLeft:10
-                }}
-            />
+                <Button
+                    title='Ota kuva'
+                    onPress={() => navigation.navigate('Kuvat')}
+                    icon={
+                        <Icon
+                            name="camera"
+                            size={25}
+                            color="white"
+                        />}
+                    buttonStyle={{
+                        backgroundColor: '#52738c',
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        borderRadius: 10,
+                    }}
+                    containerStyle={{
+                        width: 150,
+                        marginRight: 10,
+                        marginLeft: 10
+                    }}
+                />
 
-            <Button
-            icon={
-                <Icon
-                  name="save"
-                  size={25}
-                  color="white"
-                />}
-                title='Tallenna'
-                onPress={formik.handleSubmit}
-                buttonStyle={{
-                    backgroundColor: '#52738c',
-                    borderWidth: 2,
-                    borderColor: 'white',
-                    borderRadius: 10,
-                }}
-                containerStyle={{
-                    width: 150,
-                }}
-            />
-                        <Button
-            icon={
-                <Icon
-                  name="save"
-                  size={25}
-                  color="white"
-                />}
-                title='Route params'
-                onPress={() => console.log(route.params.uri)}
-                buttonStyle={{
-                    backgroundColor: '#52738c',
-                    borderWidth: 2,
-                    borderColor: 'white',
-                    borderRadius: 10,
-                }}
-                containerStyle={{
-                    width: 150,
-                }}
-            />
-        </View>
+                <Button
+                    icon={
+                        <Icon
+                            name="save"
+                            size={25}
+                            color="white"
+                        />}
+                    title='Tallenna'
+                    onPress={formik.handleSubmit}
+                    buttonStyle={{
+                        backgroundColor: '#52738c',
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        borderRadius: 10,
+                    }}
+                    containerStyle={{
+                        width: 150,
+                    }}
+                />
+                <Button
+                    icon={
+                        <Icon
+                            name="save"
+                            size={25}
+                            color="white"
+                        />}
+                    title='Pams'
+                    onPress={()=>console.log(route.params.uri)}
+                    buttonStyle={{
+                        backgroundColor: '#52738c',
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        borderRadius: 10,
+                    }}
+                    containerStyle={{
+                        width: 150,
+                    }}
+                />
+
+            </View>
 
         </View>
     )

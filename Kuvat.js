@@ -86,7 +86,7 @@ export default function Kuvat({ route, navigation }) {
               {
                 photoName
                   ? <Image style={{ flex: 1 }} source={{ uri: photoName }} />
-                  : <Text style={{ flex: 1 }}>File</Text>
+                  : <Text style={{ flex: 1 }}></Text>
               }
             </View>
           </View>
