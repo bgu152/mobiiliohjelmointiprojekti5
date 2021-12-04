@@ -12,7 +12,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 import styles from './styles';
-import lisaa from './assets/lisaa.png';
+import addchild from './assets/addchild.png';
 import mekko from './assets/mekko.png';
 import kukka from './assets/kukka.png';
 import lapsilogo from './assets/lapsilogo.png';
@@ -154,7 +154,13 @@ export default function Lapset({ navigation }) {
 
   return (
     <View>
-      <Image source={kukka} style={styles.bannerImg} />
+      <TouchableOpacity onPress={() => navigation.navigate('LisaaLapsi')}>
+      <Image 
+      source={addchild} 
+      style={styles.bannerImg}
+      
+      />
+      </TouchableOpacity> 
       <FlatList
         style={{ marginLeft: "5%" }}
         keyExtractor={(item) => item.nimi}

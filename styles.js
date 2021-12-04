@@ -65,7 +65,38 @@ export default styles = StyleSheet.create({
       flex:1,      
       paddingRight:70,
       marginRight:10,
+    },
+
+    //Kotisivun stylit
+    kuvarivi:{
+      flex:1,
+      flexDirection:'row',
+      width : 500,
+      height : 500
+    },
+    touchable:{
+      flex:1,
+       zIndex: 1,
+       height:500,
+      width:500
+    },
+    body: {
+      backgroundColor: 'yellow',
+      padding:20
+    },
+    images:{
+      width :  400,
+    },
+  
+    kuvateksti:{
+      fontSize:20,
+    },
+
+    imageFlex:{
+      flexDirection:'row'
     }
+    
+
     
 
   });

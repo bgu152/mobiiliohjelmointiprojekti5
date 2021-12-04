@@ -14,85 +14,26 @@ import mekko from './assets/mekko.png';
 import hakulogo from './assets/HakuLogo.png';
 import lisaalogo from './assets/lisaalogo.png';
 import children from './assets/children.png';
+import styles from './styles';
+import addchild from './assets/addchild.png';
 
 
 export default function Koti({ navigation }) {
   return (
     <View>
 
-      <View>
-
+      <View style ={{paddingTop:40}}>
 
       
-      <View>
-      <Text style={styles.kuvateksti}>Uusi vaatekappale</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Lisaa2')} >      
-      <Image style = {styles.images} source ={lisaalogo}/>
-      </TouchableOpacity>
-      </View>
-
-      <Text style={styles.kuvateksti}>Selaa vaatteita</Text>
-      <TouchableOpacity  onPress={() => navigation.navigate('Haku')} >
-      <Image style = {styles.images} source ={hakulogo}/>
+      <TouchableOpacity onPress={() => navigation.navigate('Haku')} > 
+      <Image style = {styles.images} source ={hakulogo}/>  
       </TouchableOpacity>
 
-
-      <TouchableOpacity  onPress={() => navigation.navigate('Lapset')} >
+     <TouchableOpacity  onPress={() => navigation.navigate('Lapset')} >      
       <Image style = {styles.images} source ={children}/>
-      </TouchableOpacity>
+      </TouchableOpacity> 
+    </View>
 
-      </View>
-
-      {/* <Button title='Haku' onPress={() => navigation.navigate('Haku')} />
-      <Text>Lisaa</Text>
-      <Button title='Lisaa' onPress={() => navigation.navigate('Lisaa')} />
-      <Text>Lapset</Text>
-      <Button title='Lapset' onPress={() => navigation.navigate('Lapset')} />
-      <Text>LisaaLapsi</Text>
-      <Button title='LisaaLapsi' onPress={() => navigation.navigate('LisaaLapsi')} /> */}
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  listcontainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    alignItems: 'center'
-  },
-  listItemcontainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }, 
-  body: {
-    backgroundColor: 'yellow',
-    padding:20
-  },
-  images:{
-    width : 200,
-    height : 200
-  },
-
-  kuvateksti:{
-    fontSize:20,
-  },
-
-  kuvarivi:{
-    flex:1,
-    flexDirection:'row',
-    width : 500,
-    height : 500
-  },
-  touchable:{
-    flex:1,
-     zIndex: 1,
-     height:500,
-    width:500
-
-  }
-});

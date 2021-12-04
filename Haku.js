@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, Touchable
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
 import 'firebase/firestore';
-import { Input, Button, ListItem, Header, Avatar, SearchBar } from 'react-native-elements';
+import { Input, Button, ListItem, Header, Avatar, SearchBar,Icon,  } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import { useFormik } from 'formik';
 import { Picker } from '@react-native-community/picker';
@@ -120,17 +120,10 @@ export default function Haku({ route, navigation }) {
   const renderKaikki = ({ item }) => (
     
     <ListItem.Swipeable
-  leftContent={
-    <Button
-      title="Muuta"
-      icon={{ name: 'update', color: 'white' }}
-      buttonStyle={{ minHeight: '100%' }}
-    />
-  }
   rightContent={
     
     <Button
-    onPress={() => deleteFromDatabase(item.id)} 
+    onPress={() => poistoVarmistuksella(item.id)} 
       title="Poista"
       icon={{ name: 'delete', color: 'white' }}
       buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
@@ -149,9 +142,6 @@ export default function Haku({ route, navigation }) {
         </View>
         <View style={styles.listItemcontainer}>
           <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
-        </View>
-        <View style={styles.listItemcontainer}>
-          <Button titel ="testaa getAvatar" onPress = {()=> {console.log(getAvatarKuvalla(item))}}/>
         </View>
       </ListItem.Content>
     </ListItem>
@@ -192,6 +182,23 @@ function getAvatarKuvalla(item) {
     await deleteDoc(doc(db, 'vaatekappaleet', id));
     updateVaatekappaleet();
   }
+
+  const poistoVarmistuksella = (id) =>
+  Alert.alert(
+    "Vaatteen poisto",
+    "Haluatko varmasti poistaa vaatekappaleen?",
+    [
+      {
+        text: "Kyllä",
+        onPress: () => deleteFromDatabase(id),
+        style: "cancel",
+      },
+    ],
+    {
+      cancelable: true,
+    }
+  );
+  
 
   return (
     <SafeAreaView >
@@ -236,12 +243,14 @@ function getAvatarKuvalla(item) {
           </View>
         </View>
       </View>
+      <View style={styles.napitRivissa}>
       <Button
       buttonStyle={{
         backgroundColor: '#52738c',
         borderWidth: 2,
         borderColor: 'white',
         borderRadius: 5,
+        width:334,
     }}
         mode="contained"
         title='Hae'
@@ -249,11 +258,31 @@ function getAvatarKuvalla(item) {
       >
         Enter
       </Button>
+      <Button
+      icon={
+        <Icon
+            name="add"
+            size={25}
+            color="white"
+        />}
+      buttonStyle={{
+        backgroundColor: '#52738c',
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 5
+    }}
+        mode="contained"
+        onPress={() => navigation.navigate('Lisaa2')}
+      >
+        Enter
+      </Button>
+      </View>
       <FlatList
         style={{ marginLeft: "5%" }}
         renderItem={renderKaikki}
         data={vaatekappaleet}
       />
+      
 
     </SafeAreaView>
   );

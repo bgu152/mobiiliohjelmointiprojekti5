@@ -65,6 +65,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
         let dataSTR = JSON.stringify(data);
         console.log(dataSTR);
         await addDoc(collection(db, 'vaatekappaleet'), data);
+        Alert.alert('Vaatekappale tallennettu');
     }
 
     const formik = useFormik({
@@ -85,6 +86,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
             console.log('inside formic');
             console.log(JSON.stringify(values));
             postVaatekappale(values);
+            
         }
     });
 
@@ -117,7 +119,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
             </View>
             <View style={styles.napitRivissa}>
 
-                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen: </Text></View>
+                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen </Text></View>
                     <View style = {styles.pickerBoksi}>
                 <Picker
                     style={styles.picker}
@@ -135,7 +137,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
             </View>
             <View style={styles.napitRivissa}>
 
-                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vuodenajalle:</Text></View>
+                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vuodenajalle</Text></View>
 
                         <View style = {styles.pickerBoksi}>
                 <Picker
@@ -144,10 +146,10 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                     onValueChange={formik.handleChange('vuodenajalle')}
                     selectedValue={formik.values.vuodenajalle}
                 >
-                    <Picker.Item label="Kaikille vuodenajoille" value="kaikki" id="1" />
+                    <Picker.Item label="Kaikki" value="kaikki" id="1" />
                     <Picker.Item label="Talvi" value="talvi" id="2" />
                     <Picker.Item label="Kesä" value="kesa" id="3" />
-                    <Picker.Item label="Syksy ja kevät" value="syksy_kevat" id="4" />
+                    <Picker.Item label="Syksy / kevät" value="syksy_kevat" id="4" />
                 </Picker>
                 </View>
             </View>
@@ -209,25 +211,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                         width: 150,
                     }}
                 />
-                <Button
-                    icon={
-                        <Icon
-                            name="save"
-                            size={25}
-                            color="white"
-                        />}
-                    title='Pams'
-                    onPress={()=>console.log(route.params.uri)}
-                    buttonStyle={{
-                        backgroundColor: '#52738c',
-                        borderWidth: 2,
-                        borderColor: 'white',
-                        borderRadius: 10,
-                    }}
-                    containerStyle={{
-                        width: 150,
-                    }}
-                />
+
 
             </View>
 
