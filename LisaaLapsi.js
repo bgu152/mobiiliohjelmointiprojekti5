@@ -30,8 +30,8 @@ export default function LisaaLapsi({ navigation }) {
   const [nimi, setNimi] = useState('');
 
 
-  const [lapsi, setLapsi] = useState({spaiva:'', kuvalinkki:''});
-  
+  const [lapsi, setLapsi] = useState({ spaiva: '', kuvalinkki: '' });
+
   const [image, setImage] = useState(null);
 
   useEffect(() => {//kameraoikeudet
@@ -51,7 +51,7 @@ export default function LisaaLapsi({ navigation }) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    }); 
+    });
 
     if (!result.cancelled) {
       Alert.alert('Kuva valittu');
@@ -59,13 +59,13 @@ export default function LisaaLapsi({ navigation }) {
     }
   };
 
-  function dateInputToString(paiva,kuukausi,vuosi){
-    let paivaINT= parseInt(paiva);
-    if (paivaINT <10){
+  function dateInputToString(paiva, kuukausi, vuosi) {
+    let paivaINT = parseInt(paiva);
+    if (paivaINT < 10) {
       paiva = "0" + paiva;
     };
-    let kuuINT= parseInt(kuukausi);
-    if (kuuINT <10){
+    let kuuINT = parseInt(kuukausi);
+    if (kuuINT < 10) {
       kuukausi = "0" + kuukausi;
     };
     return spaiva = paiva + '.' + kuukausi + '.' + vuosi;
@@ -74,26 +74,26 @@ export default function LisaaLapsi({ navigation }) {
 
   async function PostLapsi() { //lapsi lähetetään Firebase tietokantaan 
 
-    await setDoc(doc(db,'lapset',nimi),lapsi);
+    await setDoc(doc(db, 'lapset', nimi), lapsi);
     Alert.alert('Lapsi tallennettu');
   };
 
   useEffect(() => {
     console.log('useEffect');
-    console.log('nimi: '+ nimi);
-    console.log('paiva: '+paiva);
-    console.log('image: '+image);
-    console.log('kuukausi: '+kuukausi);
-    console.log('vuosi: '+vuosi);
-    console.log('dateinput to string: '+dateInputToString(paiva,kuukausi,vuosi));
-    setLapsi({spaiva:dateInputToString(paiva,kuukausi,vuosi), kuvalinkki:image})
+    console.log('nimi: ' + nimi);
+    console.log('paiva: ' + paiva);
+    console.log('image: ' + image);
+    console.log('kuukausi: ' + kuukausi);
+    console.log('vuosi: ' + vuosi);
+    console.log('dateinput to string: ' + dateInputToString(paiva, kuukausi, vuosi));
+    setLapsi({ spaiva: dateInputToString(paiva, kuukausi, vuosi), kuvalinkki: image })
     console.log('lapsi');
     console.log(lapsi);
 
 
-    
-    
-  },[nimi, paiva, image, kuukausi, vuosi])
+
+
+  }, [nimi, paiva, image, kuukausi, vuosi])
 
   const kuuPituudet = [{ pituus: '31' }, { pituus: '28' }, { pituus: '31' }, { pituus: '30' }, { pituus: '31' }, { pituus: '30' }, { pituus: '31' }, { pituus: '31' }, { pituus: '30' }, { pituus: '31' }, { pituus: '30' }, { pituus: '31' }];
 
@@ -151,7 +151,7 @@ export default function LisaaLapsi({ navigation }) {
   }
 
   return (
-    <View style = {styles.container}>
+    <View style={styles.container}>
       <Image source={kukka} style={styles.bannerImg} />
       <View><Text style={styles.sivuotsikko}>Lapsen nimi ja syntymäpäivä</Text></View>
 
@@ -163,23 +163,25 @@ export default function LisaaLapsi({ navigation }) {
       />
 
       <View style={styles.napitRivissa} >
-        <View style={styles.pickertekstiBoksiBD}><Text style={styles.pickertekstiBD}>Vuosi</Text></View>
+        <View style={styles.pickertekstiBoksiBD}><Text style={styles.pickertekstiBD}>Päviä</Text></View>
         <View style={styles.pickerBoksi}>
           <Picker
             style={styles.Picker}
             enabled={true}
-            onValueChange={(vuosi) => setVuosi(vuosi)}
-            selectedValue={vuosi}
+            onValueChange={(paiva) => setPaiva(paiva)}
+            selectedValue={paiva}
           >
-            {vuodet.map((item) => <Picker.Item
-              label={item.vuosi}
-              value={item.vuosi}
-              key={item.vuosi} />
+            {paivat.map((item) => <Picker.Item
+              label={item.paiva}
+              value={item.paiva}
+              key={item.paiva} />
             )}
 
           </Picker>
         </View>
       </View>
+
+
 
       <View style={styles.napitRivissa} >
         <View style={styles.pickertekstiBoksiBD}><Text style={styles.pickertekstiBD}>Kuukausi</Text></View>
@@ -201,18 +203,18 @@ export default function LisaaLapsi({ navigation }) {
       </View>
 
       <View style={styles.napitRivissa} >
-        <View style={styles.pickertekstiBoksiBD}><Text style={styles.pickertekstiBD}>Päviä</Text></View>
+        <View style={styles.pickertekstiBoksiBD}><Text style={styles.pickertekstiBD}>Vuosi</Text></View>
         <View style={styles.pickerBoksi}>
           <Picker
             style={styles.Picker}
             enabled={true}
-            onValueChange={(paiva) => setPaiva(paiva)}
-            selectedValue={paiva}
+            onValueChange={(vuosi) => setVuosi(vuosi)}
+            selectedValue={vuosi}
           >
-            {paivat.map((item) => <Picker.Item
-              label={item.paiva}
-              value={item.paiva}
-              key={item.paiva} />
+            {vuodet.map((item) => <Picker.Item
+              label={item.vuosi}
+              value={item.vuosi}
+              key={item.vuosi} />
             )}
 
           </Picker>
@@ -221,58 +223,55 @@ export default function LisaaLapsi({ navigation }) {
 
       <View style={styles.napitRivissa}>
 
-      <View style={styles.napitRivissa}></View>
-      <Button
-        title='Valitse kuva'
-        onPress={() => pickImage()}
-        icon={
-          <Icon
-            name="image"
-            size={25}
-            color="black"
-          />}
-        titleStyle={{
-          color:'grey'
-        }}
-        buttonStyle={{
-          backgroundColor: 'white',
-          borderWidth: 2,
-          borderColor: 'grey',
-          borderRadius: 5,
-          width:150,
-      }}
-        containerStyle={{
-          width: 150,
-          marginRight: 10,
-          marginLeft: 10
-        }}
-      />
-
-      <Button
-        title='Tallenna'
-        onPress={() => PostLapsi()}
-        icon={
-          <Icon
-            name="save"
-            size={25}
-            color="black"
-          />}
+        <Button
+          title='Valitse kuva'
+          onPress={() => pickImage()}
+          icon={
+            <Icon
+              name="image"
+              size={25}
+              color="black"
+            />}
           titleStyle={{
-            color:'grey'
+            color: 'grey'
           }}
           buttonStyle={{
             backgroundColor: 'white',
             borderWidth: 2,
             borderColor: 'grey',
             borderRadius: 5,
-            width:150,
-        }}
-        containerStyle={{
-          width: 180,
-          marginRight: 10,
-          marginLeft: 5
-      }}
-      />
+            width: 175,
+          }}
+          containerStyle={{
+            marginRight: 10,
+            marginLeft: 10
+          }}
+        />
+
+        <Button
+          title='Tallenna'
+          onPress={() => PostLapsi()}
+          icon={
+            <Icon
+              name="save"
+              size={25}
+              color="black"
+            />}
+          titleStyle={{
+            color: 'grey'
+          }}
+          buttonStyle={{
+            backgroundColor: 'white',
+            borderWidth: 2,
+            borderColor: 'grey',
+            borderRadius: 5,
+            width: 175,
+          }}
+          containerStyle={{
+            marginRight: 10,
+            marginLeft: 5
+          }}
+        />
       </View>
 
     </View>

@@ -35,6 +35,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
     ];
     const [lapset, setLapset] = useState([]);
 
+
     useEffect(() => {
         ListaaLapset()
     }, []);

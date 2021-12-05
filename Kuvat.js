@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View,  Image } from 'react-native';
+import { StyleSheet, Text, View,  Imag, Alert,Image  } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 
@@ -27,6 +27,15 @@ export default function Kuvat({ route, navigation }) {
     }
   };
 
+
+  function handleReturn(){
+    if(photoName){
+      Alert.alert('Kuva tallennettu, muista tallentaa vaatekappale');
+    }else{Alert.alert('Kuvaa ei otettu');
+    }    
+    navigation.navigate('Lisaa2',{uri:photoName}); 
+  }   
+
   return (
     <View style={styles.container}>
       {hasCameraPermission ?
@@ -35,7 +44,7 @@ export default function Kuvat({ route, navigation }) {
             <Camera style={{ flex: 4 }} ref={camera} />
 
             <View style={styles.napitRivissa}>
-            <View>
+            <View style = {{paddingTop:10}}>
               <Button 
               title="Ota kuva" onPress={snap} 
               
@@ -43,43 +52,48 @@ export default function Kuvat({ route, navigation }) {
                 <Icon
                   name="camera"
                   size={25}
-                  color="white"
+                  color="black"
                 />}
-            buttonStyle={{
-                backgroundColor: '#52738c',
-                borderWidth: 2,
-                borderColor: 'white',
-                borderRadius: 10,
-            }}
-            containerStyle={{
-                width: 170,//'40%'
-                marginTop:10,
-                marginRight:10, 
-                marginLeft:10
-            }}/>
+                titleStyle={styles.buttonTitle}
+
+                buttonStyle={{
+                  backgroundColor: 'white',
+                  borderWidth: 2,
+                  borderColor: 'grey',
+                  borderRadius: 5,
+                  width:175,
+              }}
+          
+                containerStyle={{
+                  marginRight: 5,
+                  marginLeft: 10
+              }}/>
             </View>
-            <View>
+            <View style = {{paddingTop:10}}>
               <Button 
               title="Tallenna kuva" 
-              onPress={() => navigation.navigate('Lisaa2',{uri:photoName})} 
+              onPress={() => handleReturn()} 
               icon={
                 <Icon
-                  name="camera"
+                  name="save"
                   size={25}
-                  color="white"
+                  color="black"
                 />}
-            buttonStyle={{
-                backgroundColor: '#52738c',
-                borderWidth: 2,
-                borderColor: 'white',
-                borderRadius: 10,
-            }}
-            containerStyle={{
-                width: 170,
-                marginTop:10,
-                marginRight:10, 
-                marginLeft:10
-            }}/>
+                titleStyle={styles.buttonTitle}
+
+                buttonStyle={{
+                  backgroundColor: 'white',
+                  borderWidth: 2,
+                  borderColor: 'grey',
+                  borderRadius: 5,
+                  width:175,
+              }}
+          
+                containerStyle={{
+                  marginRight: 10,
+                  marginLeft: 5
+
+              }}/>
             </View>
             </View>
             <View style={{ flex: 4 }}>

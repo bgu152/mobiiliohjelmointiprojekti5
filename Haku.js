@@ -5,11 +5,12 @@ import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, Touchable
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
 import 'firebase/firestore';
-import { Input, Button, ListItem, Header, Avatar, SearchBar,Icon,  } from 'react-native-elements';
+import { Input, Button, ListItem, Header, Avatar, SearchBar, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import { useFormik } from 'formik';
 import { Picker } from '@react-native-community/picker';
-import {Dimensions} from 'react-native'
+import { Dimensions } from 'react-native';
+import { useIsFocused } from "@react-navigation/native";
 
 
 
@@ -22,20 +23,23 @@ import mekko from './assets/mekko.png';
 
 export default function Haku({ route, navigation }) {
   const uri = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/Camera/bbe4f2c7-57e3-4cac-afab-b8e3fe27af99.jpg";
-  const soossi = {uri:uri};
+  const soossi = { uri: uri };
 
   const [nimiinput, setNimiinput] = useState('');
   const [kategoriainput, setKategoriainput] = useState('');
   const [kategoriat, setKategoriat] = useState([]);
   const [lapset, setLapset] = useState([]);
+  const isFocused = useIsFocused();
 
   const [vaatekappaleet, setVaatekappaleet] = useState([]);
 
   useEffect(() => {
-    ListaaVaatteet();
-    ListaaLapset();
-    ListaaKategoriat()
-  }, []);
+    if(isFocused){
+      ListaaVaatteet();
+      ListaaLapset();
+      ListaaKategoriat()
+    }
+  }, [isFocused, nimiinput, kategoriainput]);
 
   async function ListaaKategoriat() {
     let lista = [];
@@ -78,13 +82,11 @@ export default function Haku({ route, navigation }) {
     const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
-      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki:'' };
+      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki: '' };
       uusiVaatekappale.id = doc.id;
       if (doc.data()) {
         uusiVaatekappale.lapsi = doc.data().lapsi;
-        console.log(doc.data.kategoria);
       } else {
-        console.log("Ei löydy dokumenttia");
       }
 
       if (doc.data()?.pituudelle) {
@@ -100,10 +102,7 @@ export default function Haku({ route, navigation }) {
         uusiVaatekappale.lisattypvm = doc.data().lisattypvm;
       }
       if (doc.data()?.kuvalinkki) {
-        console.log('Olemassa kuvalinkki');
         uusiVaatekappale.kuvalinkki = doc.data().kuvalinkki;
-        console.log('Tallenetaan kuvalinkki');
-        console.log(uusiVaatekappale.kuvalinkki);
       }
 
       lista = [...lista, uusiVaatekappale];
@@ -118,33 +117,33 @@ export default function Haku({ route, navigation }) {
   }
 
   const renderKaikki = ({ item }) => (
-    
+
     <ListItem.Swipeable
-  rightContent={
-    
-    <Button
-    onPress={() => poistoVarmistuksella(item.id)} 
-      title="Poista"
-      icon={{ name: 'delete', color: 'white' }}
-      buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-    />
-  }
->
-    <ListItem style={styles.listcontainer} bottomDivider>
-      <Avatar source= {getAvatarKuvalla(item)} style={{ width: 70, height: 70 }} />
-      <ListItem.Content>
-        <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
-        <View style={styles.listItemcontainer}>
-          <ListItem.Subtitle>Käyttäjä: {capitalizeFirstLetter(item.lapsi)}</ListItem.Subtitle>
-        </View>
-        <View style={styles.listItemcontainer}>
-          <ListItem.Subtitle>Lisätty: {item.lisattypvm}</ListItem.Subtitle>
-        </View>
-        <View style={styles.listItemcontainer}>
-          <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
-        </View>
-      </ListItem.Content>
-    </ListItem>
+      rightContent={
+
+        <Button
+          onPress={() => poistoVarmistuksella(item.id)}
+          title="Poista"
+          icon={{ name: 'delete', color: 'white' }}
+          buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+        />
+      }
+    >
+      <ListItem style={styles.listcontainer} bottomDivider>
+        <Avatar source={getAvatarKuvalla(item)} style={{ width: 70, height: 70 }} />
+        <ListItem.Content>
+          <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
+          <View style={styles.listItemcontainer}>
+            <ListItem.Subtitle>Käyttäjä: {capitalizeFirstLetter(item.lapsi)}</ListItem.Subtitle>
+          </View>
+          <View style={styles.listItemcontainer}>
+            <ListItem.Subtitle>Lisätty: {item.lisattypvm}</ListItem.Subtitle>
+          </View>
+          <View style={styles.listItemcontainer}>
+            <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
+          </View>
+        </ListItem.Content>
+      </ListItem>
     </ListItem.Swipeable>
   );
 
@@ -167,133 +166,109 @@ export default function Haku({ route, navigation }) {
       return outfit;
     }
   }
-function getAvatarKuvalla(item) {
-  console.log('getAvatarKuvalla');
-  console.log(item.kuvalinkki);
-  if(item.kuvalinkki){
-    return { uri: item.kuvalinkki }
-  }else{
-    return getAvatar(item)}
-};
+  function getAvatarKuvalla(item) {
+    if (item.kuvalinkki) {
+      return { uri: item.kuvalinkki }
+    } else {
+      return getAvatar(item)
+    }
+  };
 
 
   async function deleteFromDatabase(id) {
-    console.log('deleteting: ' + id);
     await deleteDoc(doc(db, 'vaatekappaleet', id));
     updateVaatekappaleet();
   }
 
   const poistoVarmistuksella = (id) =>
-  Alert.alert(
-    "Vaatteen poisto",
-    "Haluatko varmasti poistaa vaatekappaleen?",
-    [
+    Alert.alert(
+      "Vaatteen poisto",
+      "Haluatko varmasti poistaa vaatekappaleen?",
+      [
+        {
+          text: "Kyllä",
+          onPress: () => deleteFromDatabase(id),
+          style: "cancel",
+        },
+      ],
       {
-        text: "Kyllä",
-        onPress: () => deleteFromDatabase(id),
-        style: "cancel",
-      },
-    ],
-    {
-      cancelable: true,
-    }
-  );
-  
+        cancelable: true,
+      }
+    );
+
 
   return (
-    <View style = {styles.container}>
-      
+    <View style={styles.container}>
+
       <View>
- 
-          <Picker
-            enabled={true}
-            mode="dropdown"
-            onValueChange={(itemValue) => { setKategoriainput(itemValue) }}
-            selectedValue={kategoriainput}
-          >
-            {kategoriat.map((item) => <Picker.Item
-              label={capitalizeFirstLetter(item.kategoria)}
-              value={item.kategoria}
-              key={item.kategoria.toString()} />
-            )}
-            <Picker.Item label="Kaikki vaatekategoriat" value="" id="1" />
-          </Picker>
+
+        <Picker
+          enabled={true}
+          mode="dropdown"
+          onValueChange={(itemValue) => setKategoriainput(itemValue) }
+          selectedValue={kategoriainput}
+        >
+          {kategoriat.map((item) => <Picker.Item
+            label={capitalizeFirstLetter(item.kategoria)}
+            value={item.kategoria}
+            key={item.kategoria.toString()} />
+          )}
+          <Picker.Item label="Kaikki vaatekategoriat" value="" id="1" />
+        </Picker>
 
 
-          <Picker          
-            enabled={true}
-            mode="dropdown"
-            onValueChange={(itemValue) => { setNimiinput(itemValue) }}
-            selectedValue={nimiinput}
-          >
-            {lapset.map((item) => <Picker.Item
-              label={capitalizeFirstLetter(item.nimi)}
-              value={item.nimi}
-              key={item.nimi} />
-            )}
-            <Picker.Item label="Kaikkien vaatekappaleet" value="" id="1" />
-          </Picker>
+        <Picker
+          enabled={true}
+          mode="dropdown"
+          onValueChange={(itemValue) => { setNimiinput(itemValue) }}
+          selectedValue={nimiinput}
+        >
+          {lapset.map((item) => <Picker.Item
+            label={capitalizeFirstLetter(item.nimi)}
+            value={item.nimi}
+            key={item.nimi} />
+          )}
+          <Picker.Item label="Kaikkien vaatteet" value="" id="1" />
+        </Picker>
 
       </View>
       <View style={styles.napitRivissa}>
-      <Button
 
-      titleStyle={styles.buttonTitle}
+        <Button
 
-      buttonStyle={{
-        backgroundColor: 'white',
-        borderWidth: 2,
-        borderColor: 'grey',
-        borderRadius: 5,
-        width:170,
-    }}
+          title='Uusi'
+          icon={
+            <Icon
+              name="add"
+              size={25}
+              color="black"
+            />}
+          titleStyle={styles.buttonTitle}
 
-      containerStyle={{
-        width: 170,
-        marginRight: 10,
-        marginLeft: 5
-    }}
-        mode="contained"
-        title='Hae'
-        onPress={updateVaatekappaleet}
-      >
-        Enter
-      </Button>
-      <Button
+          buttonStyle={{
+            backgroundColor: 'white',
+            borderWidth: 2,
+            borderColor: 'grey',
+            borderRadius: 5,
+            
+            width: 370,
+          }}
 
-      title =  'Uusi'
-      icon={
-        <Icon
-            name="add"
-            size={25}
-            color="black"
-        />}
-        titleStyle={styles.buttonTitle}
-
-        buttonStyle={{
-          backgroundColor: 'white',
-          borderWidth: 2,
-          borderColor: 'grey',
-          borderRadius: 5,
-          width:170,
-      }}
-
-      containerStyle={{
-        width: 170,
-        marginRight: 10,
-        marginLeft: 5
-    }}
-        mode="contained"
-        onPress={() => navigation.navigate('Lisaa2')}
-      >
-        Enter
-      </Button>
+          containerStyle={{
+            marginRight: 10,
+            marginLeft: 5
+          }}
+          mode="contained"
+          onPress={() => navigation.navigate('Lisaa2')}
+        >
+          Enter
+        </Button>
       </View>
       <FlatList
         renderItem={renderKaikki}
         data={vaatekappaleet}
       />
-      
+
 
     </View>
   );

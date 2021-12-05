@@ -57,10 +57,9 @@ export default function Lapset({ navigation }) {
          },
          {
           text: "Kyllä",          
-          onPress: () => Asetakuva(nimi, result.uri),
+          onPress: () => deleteFromDatabase(nimi),
          }
         ]);
-      setImage(result.uri);
     }
   };
 
@@ -112,12 +111,25 @@ async function Asetakuva(nimi, uri) {
     ListaaLapset()
   }
 
-  async function deleteFromDatabase(id) {
-    console.log('deleteting: ' + id);
-    await deleteDoc(doc(db, 'lapset', id));
+  async function deleteFromDatabase(nimi) {
+    console.log('deleteting: ' + nimi);
+    await deleteDoc(doc(db, 'lapset', nimi));
     updateLapset();
   }
 
+  function poistaLapsi(nimi){
+    Alert.alert('', 'Haluatko varmasti muuttaa lapset?', [
+      {
+        text: "Ei",
+        onPress: () => null,
+        style: "cancel"
+       },
+       {
+        text: "Kyllä",          
+        onPress: () => deleteFromDatabase(nimi),
+       }
+      ]);
+  };
   
 
   const renderKaikki = ({ item }) => (
@@ -126,7 +138,7 @@ async function Asetakuva(nimi, uri) {
       rightContent={
 
         <Button
-          onPress={() => deleteFromDatabase(item.id)}
+          onPress={() => poistaLapsi(item.nimi)}
           title="Poista"
           icon={{ name: 'delete', color: 'white' }}
           buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
