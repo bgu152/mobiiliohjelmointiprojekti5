@@ -21,9 +21,14 @@ export default styles = StyleSheet.create({
     picker:{
         backgroundColor: '#abafb1',
     },
+    
     images:{
       width : 200,
       height : 200
+    },
+    imgNarrow:{
+      height:150,
+      width:300,
     },
     bannerImg:{      
       width : 500,
@@ -53,7 +58,16 @@ export default styles = StyleSheet.create({
     pickertekstiBoksi:{
       paddingTop:17,
       flex:1,
+    },
+    pickertekstiBoksiBD:{
+      paddingTop:12,
+      flex:1,
 
+    },
+
+    pickertekstiBD:{
+      color:'grey',
+      fontSize:18,
     },
 
     napitRivissa: {
@@ -64,6 +78,11 @@ export default styles = StyleSheet.create({
     pickerBoksi:{
       flex:1,      
       paddingRight:70,
+      marginRight:10,
+    },
+    bdaypickerBoksi:{
+      flex:1,      
+      paddingRight:10,
       marginRight:10,
     },
 
@@ -94,8 +113,19 @@ export default styles = StyleSheet.create({
 
     imageFlex:{
       flexDirection:'row'
-    }
+    },
+    buttonTitle :{
+      color: 'grey',
+    },
+    buttonBackground:{
+      backgroundColor: 'white',
+      borderWidth: 2,
+      borderColor: 'grey',
+      borderRadius: 5,
+      width:200,
+  }
     
+
 
     
 

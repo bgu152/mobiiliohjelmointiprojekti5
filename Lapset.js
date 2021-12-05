@@ -21,12 +21,13 @@ import { findFocusedRoute } from '@react-navigation/core';
 
 
 export default function Lapset({ navigation }) {
-  const uri = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/Camera/bbe4f2c7-57e3-4cac-afab-b8e3fe27af99.jpg";
+
   const [lapset, setLapset] = useState([]);
   const [image, setImage] = useState(null);
   useEffect(() => {
     ListaaLapset()
   }, []);
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -65,7 +66,7 @@ export default function Lapset({ navigation }) {
 
   
 
-  async function Asetakuva(nimi, uri) {
+async function Asetakuva(nimi, uri) {
     console.log(uri);
     const docRef = doc(db, "lapset", nimi);
     await updateDoc(docRef,{
@@ -153,16 +154,15 @@ export default function Lapset({ navigation }) {
   );
 
   return (
-    <View>
+    <View style = {styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('LisaaLapsi')}>
       <Image 
       source={addchild} 
-      style={styles.bannerImg}
+      style={styles.imgNarrow}
       
       />
       </TouchableOpacity> 
       <FlatList
-        style={{ marginLeft: "5%" }}
         keyExtractor={(item) => item.nimi}
         renderItem={renderKaikki}
         data={lapset}

@@ -12,7 +12,6 @@ import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
 
-
 import db from './komponentit/Tietokanta';
 import lisaa from './assets/lisaa.png';
 import styles from './styles';
@@ -93,9 +92,8 @@ const LisaaVaatekappale = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
 
-            <Image source={lisaa} style={styles.bannerImg2} />
 
-            <Text style={styles.sivuotsikko}>Tallenna uusi vaatekappale</Text>
+            <Text style={styles.sivuotsikko}>Tallenna vaatekappale</Text>
 
             <View style={styles.napitRivissa} >
 
@@ -177,18 +175,21 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                         <Icon
                             name="camera"
                             size={25}
-                            color="white"
+                            color="black"
                         />}
+                        titleStyle={styles.buttonTitle}
+
                     buttonStyle={{
-                        backgroundColor: '#52738c',
+                        backgroundColor: 'white',
                         borderWidth: 2,
-                        borderColor: 'white',
-                        borderRadius: 10,
+                        borderColor: 'grey',
+                        borderRadius: 5,
+                        width:170,
                     }}
                     containerStyle={{
-                        width: 150,
+                        width: 170,
                         marginRight: 10,
-                        marginLeft: 10
+                        marginLeft: 5
                     }}
                 />
 
@@ -197,21 +198,25 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                         <Icon
                             name="save"
                             size={25}
-                            color="white"
+                            color="black"
                         />}
                     title='Tallenna'
                     onPress={formik.handleSubmit}
+                    titleStyle={styles.buttonTitle}
+
                     buttonStyle={{
-                        backgroundColor: '#52738c',
+                        backgroundColor: 'white',
                         borderWidth: 2,
-                        borderColor: 'white',
-                        borderRadius: 10,
+                        borderColor: 'grey',
+                        borderRadius: 5,
+                        width:170,
                     }}
                     containerStyle={{
-                        width: 150,
+                        width: 170,
+                        marginRight: 10,
+                        marginLeft: 5
                     }}
                 />
-
 
             </View>
 

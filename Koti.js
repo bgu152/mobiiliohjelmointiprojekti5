@@ -20,7 +20,7 @@ import addchild from './assets/addchild.png';
 
 export default function Koti({ navigation }) {
   return (
-    <View>
+    <View style = {styles.container}>
 
       <View style ={{paddingTop:40}}>
 

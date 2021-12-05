@@ -201,12 +201,10 @@ function getAvatarKuvalla(item) {
   
 
   return (
-    <SafeAreaView >
+    <View style = {styles.container}>
       
       <View>
-      <View style={styles.napitRivissa} >
-      <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vaatekategoria</Text></View>
-        <View style = {styles.pickerBoksi}>
+ 
           <Picker
             enabled={true}
             mode="dropdown"
@@ -218,16 +216,11 @@ function getAvatarKuvalla(item) {
               value={item.kategoria}
               key={item.kategoria.toString()} />
             )}
-            <Picker.Item label="Kaikki" value="" id="1" />
+            <Picker.Item label="Kaikki vaatekategoriat" value="" id="1" />
           </Picker>
-        </View>
-        </View>
 
-        <View style={styles.napitRivissa} >
-      <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen</Text></View>
-        <View style = {styles.pickerBoksi}>
-          <Picker
-            style={styles.picker}          
+
+          <Picker          
             enabled={true}
             mode="dropdown"
             onValueChange={(itemValue) => { setNimiinput(itemValue) }}
@@ -238,19 +231,27 @@ function getAvatarKuvalla(item) {
               value={item.nimi}
               key={item.nimi} />
             )}
-            <Picker.Item label="Kaikki" value="" id="1" />
+            <Picker.Item label="Kaikkien vaatekappaleet" value="" id="1" />
           </Picker>
-          </View>
-        </View>
+
       </View>
       <View style={styles.napitRivissa}>
       <Button
+
+      titleStyle={styles.buttonTitle}
+
       buttonStyle={{
-        backgroundColor: '#52738c',
+        backgroundColor: 'white',
         borderWidth: 2,
-        borderColor: 'white',
+        borderColor: 'grey',
         borderRadius: 5,
-        width:334,
+        width:170,
+    }}
+
+      containerStyle={{
+        width: 170,
+        marginRight: 10,
+        marginLeft: 5
     }}
         mode="contained"
         title='Hae'
@@ -259,17 +260,28 @@ function getAvatarKuvalla(item) {
         Enter
       </Button>
       <Button
+
+      title =  'Uusi'
       icon={
         <Icon
             name="add"
             size={25}
-            color="white"
+            color="black"
         />}
-      buttonStyle={{
-        backgroundColor: '#52738c',
-        borderWidth: 2,
-        borderColor: 'white',
-        borderRadius: 5
+        titleStyle={styles.buttonTitle}
+
+        buttonStyle={{
+          backgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: 'grey',
+          borderRadius: 5,
+          width:170,
+      }}
+
+      containerStyle={{
+        width: 170,
+        marginRight: 10,
+        marginLeft: 5
     }}
         mode="contained"
         onPress={() => navigation.navigate('Lisaa2')}
@@ -278,12 +290,11 @@ function getAvatarKuvalla(item) {
       </Button>
       </View>
       <FlatList
-        style={{ marginLeft: "5%" }}
         renderItem={renderKaikki}
         data={vaatekappaleet}
       />
       
 
-    </SafeAreaView>
+    </View>
   );
 }
