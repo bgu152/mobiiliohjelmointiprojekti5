@@ -10,6 +10,8 @@ import Koti from './Koti';
 import Lapset from './Lapset';
 import LisaaLapsi from './LisaaLapsi';
 import Kuvat from './Kuvat';
+import MuutaLapsi from './MuutaLapsi';
+import MuutaVaatekappale from './MuutaVaate';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +31,8 @@ return (
         <Stack.Screen name = 'Lapset' component ={Lapset}/>
         <Stack.Screen name = 'LisaaLapsi' component ={LisaaLapsi}/>
         <Stack.Screen name = 'Kuvat' component ={Kuvat}/>
+        <Stack.Screen name = 'MuutaLapsi' component ={MuutaLapsi}/>
+        <Stack.Screen name = 'MuutaVaatekappale' component ={MuutaVaatekappale}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

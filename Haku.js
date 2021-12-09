@@ -1,7 +1,7 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Touchable } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
 import 'firebase/firestore';
@@ -20,8 +20,6 @@ import housut from './assets/housut.png';
 import mekko from './assets/mekko.png';
 
 export default function Haku({ route, navigation }) {
-  const uri = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540bgu152%252Ffirevaatteet5/Camera/bbe4f2c7-57e3-4cac-afab-b8e3fe27af99.jpg";
-  const soossi = { uri: uri };
 
   const [nimiinput, setNimiinput] = useState('');
   const [kategoriainput, setKategoriainput] = useState('');
@@ -79,13 +77,12 @@ export default function Haku({ route, navigation }) {
     const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
-      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki: '' };
+      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki: '', merkki: '', vuodenajalle:''};
       uusiVaatekappale.id = doc.id;
       if (doc.data()) {
         uusiVaatekappale.lapsi = doc.data().lapsi;
       } else {
       }
-
       if (doc.data()?.pituudelle) {
         uusiVaatekappale.pituudelle = doc.data().pituudelle;
       }
@@ -101,11 +98,19 @@ export default function Haku({ route, navigation }) {
       if (doc.data()?.kuvalinkki) {
         uusiVaatekappale.kuvalinkki = doc.data().kuvalinkki;
       }
+      if (doc.data()?.merkki) {
+        uusiVaatekappale.merkki = doc.data().merkki;
+      }
+      if (doc.data()?.vuodenajalle) {
+        uusiVaatekappale.vuodenajalle = doc.data().vuodenajalle;
+      }
 
       lista = [...lista, uusiVaatekappale];
     });
     setVaatekappaleet(lista);
   };
+
+  // kommer att behöva i nästa MuutaVaatekappale
 
 
   const updateVaatekappaleet = () => {
@@ -114,10 +119,8 @@ export default function Haku({ route, navigation }) {
   }
 
   const renderKaikki = ({ item }) => (
-
     <ListItem.Swipeable
       rightContent={
-
         <Button
           onPress={() => poistoVarmistuksella(item.id)}
           title="Poista"
@@ -126,22 +129,27 @@ export default function Haku({ route, navigation }) {
         />
       }
     >
-      <ListItem style={styles.listcontainer} bottomDivider>
-        <Avatar source={getAvatarKuvalla(item)} style={{ width: 70, height: 70 }} />
-        <ListItem.Content>
-          <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
-          <View style={styles.listItemcontainer}>
-            <ListItem.Subtitle>Käyttäjä: {capitalizeFirstLetter(item.lapsi)}</ListItem.Subtitle>
-          </View>
-          <View style={styles.listItemcontainer}>
-            <ListItem.Subtitle>Lisätty: {item.lisattypvm}</ListItem.Subtitle>
-          </View>
-          <View style={styles.listItemcontainer}>
-            <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
-          </View>
-        </ListItem.Content>
-      </ListItem>
+      <TouchableOpacity onPress={() => navigation.navigate('MuutaVaatekappale', item)}>
+        <ListItem style={styles.listcontainer} bottomDivider>
+          <Avatar source={getAvatarKuvalla(item)} style={{ width: 70, height: 70 }} />
+          <ListItem.Content>
+            <ListItem.Title style={{ fontSize: 18 }} >{capitalizeFirstLetter(item.kuvaus)} </ListItem.Title>
+            {(item.merkki) ? (<View style={styles.listItemcontainer}>
+              <ListItem.Subtitle>{capitalizeFirstLetter(item.merkki)}</ListItem.Subtitle>
+            </View>) : null}
+
+            <View style={styles.listItemcontainer}>
+              <ListItem.Subtitle>Käyttäjä: {capitalizeFirstLetter(item.lapsi)}</ListItem.Subtitle>
+            </View>
+
+            <View style={styles.listItemcontainer}>
+              <ListItem.Subtitle>Pituudelle: {item.pituudelle} cm</ListItem.Subtitle>
+            </View>
+          </ListItem.Content>
+        </ListItem>
+      </TouchableOpacity>
     </ListItem.Swipeable>
+
   );
 
   function capitalizeFirstLetter(string) {
@@ -161,6 +169,7 @@ export default function Haku({ route, navigation }) {
       return outfit;
     }
   }
+
   function getAvatarKuvalla(item) {
     if (item.kuvalinkki) {
       return { uri: item.kuvalinkki }
@@ -212,7 +221,7 @@ export default function Haku({ route, navigation }) {
         <Picker
           enabled={true}
           mode="dropdown"
-          onValueChange={(itemValue) => { setNimiinput(itemValue) }}
+          onValueChange={(itemValue) => {setNimiinput(itemValue) }}
           selectedValue={nimiinput}
         >
           {lapset.map((item) => <Picker.Item
@@ -222,10 +231,9 @@ export default function Haku({ route, navigation }) {
           )}
           <Picker.Item label="Kaikkien vaatteet" value="" id="1" />
         </Picker>
-
       </View>
-      <View style={styles.napitRivissa}>
 
+      <View style={styles.napitRivissa}>
         <Button
 
           title='Uusi'
@@ -251,11 +259,12 @@ export default function Haku({ route, navigation }) {
             marginLeft: 5
           }}
           mode="contained"
-          onPress={() => navigation.navigate('Lisaa2')}
+          onPress={() => navigation.navigate('Lisaa2', { uri: null })}
         >
           Enter
         </Button>
       </View>
+
       <FlatList
         renderItem={renderKaikki}
         data={vaatekappaleet}

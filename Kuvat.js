@@ -7,7 +7,7 @@ import styles from './styles';
 
 export default function Kuvat({ route, navigation }) {
   const [hasCameraPermission, setPermission] = useState(null);
-  const [photoName, setPhotoName] = useState('');
+  const [kuvalinkki, setKuvalinkki] = useState('');
 
   const camera = useRef(null);
 
@@ -23,18 +23,18 @@ export default function Kuvat({ route, navigation }) {
   const snap = async () => {
     if (camera) {
       const photo = await camera.current.takePictureAsync({ base64: true });
-      setPhotoName(photo.uri);
+      setKuvalinkki(photo.uri);
     }
   };
 
-
   function handleReturn(){
-    if(photoName){
+    if(kuvalinkki){
       Alert.alert('Kuva tallennettu, muista tallentaa vaatekappale');
+      navigation.navigate(route.params.goBackDestination);
     }else{Alert.alert('Kuvaa ei otettu');
-    }    
-    navigation.navigate('Lisaa2',{uri:photoName}); 
-  }   
+    }
+      navigation.navigate(route.params.goBackDestination,{kuvalinkki:kuvalinkki});
+  }
 
   return (
     <View style={styles.container}>
@@ -98,8 +98,8 @@ export default function Kuvat({ route, navigation }) {
             </View>
             <View style={{ flex: 4 }}>
               {
-                photoName
-                  ? <Image style={{ flex: 1 }} source={{ uri: photoName }} />
+                kuvalinkki
+                  ? <Image style={{ flex: 1 }} source={{ uri: kuvalinkki }} />
                   : <Text style={{ flex: 1 }}></Text>
               }
             </View>

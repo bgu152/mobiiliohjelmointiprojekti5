@@ -18,15 +18,17 @@ import kukka from './assets/kukka.png';
 import lapsilogo from './assets/lapsilogo.png';
 import db from './komponentit/Tietokanta';
 import { findFocusedRoute } from '@react-navigation/core';
+import { useIsFocused } from "@react-navigation/native";
 
 
 export default function Lapset({ navigation }) {
 
   const [lapset, setLapset] = useState([]);
   const [image, setImage] = useState(null);
+  const isFocused = useIsFocused();
   useEffect(() => {
-    ListaaLapset()
-  }, []);
+    if (isFocused) {ListaaLapset()}
+  }, [isFocused]);
 
   useEffect(() => {
     (async () => {
@@ -45,32 +47,32 @@ export default function Lapset({ navigation }) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    });    
+    });
 
     if (!result.cancelled) {
-      
+
       Alert.alert('', 'Haluatko varmasti muuttaa kuvan?', [
         {
           text: "Ei",
           onPress: () => null,
           style: "cancel"
-         },
-         {
-          text: "Kyllä",          
+        },
+        {
+          text: "Kyllä",
           onPress: () => Asetakuva(nimi, result.uri),
-         }
-        ]);
+        }
+      ]);
       setImage(result.uri);
     }
   };
 
-  
 
-async function Asetakuva(nimi, uri) {
+
+  async function Asetakuva(nimi, uri) {
     console.log(uri);
     const docRef = doc(db, "lapset", nimi);
-    await updateDoc(docRef,{
-    kuvalinkki: uri
+    await updateDoc(docRef, {
+      kuvalinkki: uri
     })
   };
 
@@ -88,24 +90,43 @@ async function Asetakuva(nimi, uri) {
   };
 
   function arvioituPituus(x) {
-    return Math.round(-0.0008*x*x+0.6195 *x + 66.6144);
+    return Math.round(-0.0008 * x * x + 0.6195 * x + 66.6144);
   }
 
-  function kuukausiIka(dateSTR){
+  function laskeIka(spaivaUnix) {//koodi lähteestä https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
+    var tanaan = new Date();
+    var spaiva = new Date(spaivaUnix);
+    var ika = tanaan.getFullYear() - spaiva.getFullYear();
+    var m = tanaan.getMonth() - spaiva.getMonth();
+    if (m < 0 || (m === 0 && tanaan.getDate() < spaiva.getDate())) {
+      ika--;
+    }
+    return ika;
+}
+
+
+  function kuukausiIka(spaivaUnix) {
     let tanaan = new Date();
-    let vuodet = tanaan.getFullYear()-parseInt(dateSTR.substring(6,10));
-    let kuukaudet =12*vuodet +  tanaan.getMonth() + 1 - parseInt(dateSTR.substring(3,5));
-    let paivat = tanaan.getDate()-dateSTR.substring(0,2);
-    kuukaudet += Math.floor(paivat * 1.0 / 30);
+    let unixIka = tanaan.getTime().toFixed(0) - spaivaUnix*1.0;
+    let kuukaudet = unixIka * 1.0 / (1000 * 60 * 60 * 24 * 30.437);
     return kuukaudet;
+
   }
 
-  function laskeIka(dateSTR){
-    let kuukaudet = kuukausiIka(dateSTR);
-    let vuodet = Math.floor(kuukaudet/12);
-    kuukaudet = kuukaudet%12;
-    return vuodet + 'v ' + kuukaudet + 'kk'  ;
-  }
+  // function laskeIka(spaivaUnix) {
+  //   let tanaan = new Date();
+  //   let spaiva = new Date(spaivaUnix);
+    
+  //   let vuodet = tanaan.getFullYear() - spaiva.getFullYear();
+    
+  //   let kuukaudet = tanaan.getMonth() - spaiva.getMonth();
+    
+  //   if (kuukaudet > 0) {
+  //     return vuodet + 'v ' + kuukaudet + 'kk';
+  //   } else {
+  //     return (vuodet - 1) + 'v ' + (12 + kuukaudet) + 'kk';
+  //   }
+  // }
 
   const updateLapset = () => {
     setLapset([]);
@@ -118,18 +139,18 @@ async function Asetakuva(nimi, uri) {
     updateLapset();
   }
 
-  function poistaLapsi(nimi){
+  function poistaLapsi(nimi) {
     Alert.alert('', 'Haluatko varmasti muuttaa lapset?', [
       {
         text: "Ei",
         onPress: () => null,
         style: "cancel"
-       },
-       {
-        text: "Kyllä",          
+      },
+      {
+        text: "Kyllä",
         onPress: () => deleteFromDatabase(nimi),
-       }
-      ]);
+      }
+    ]);
   };
 
   const renderKaikki = ({ item }) => (
@@ -144,38 +165,36 @@ async function Asetakuva(nimi, uri) {
           buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
         />
       }
-    >
-      <ListItem style={styles.listcontainer} bottomDivider>
-        <TouchableOpacity onPress = {() => pickImage(item.nimi)}>
-        <Avatar rounded source={{ uri: item.kuvalinkki }} defaultSource={lapsilogo} style={{ width: 70, height: 70 }} />
-        </TouchableOpacity>         
+    ><TouchableOpacity onPress={() => navigation.navigate('MuutaLapsi', {nimi:item.nimi, spaiva:item.spaiva, kuvalinkki:item.kuvalinkki})}>
+      <ListItem bottomDivider>
         
-        <View>        
-        <ListItem>
+          <Avatar rounded source={{ uri: item.kuvalinkki }} defaultSource={lapsilogo} style={{ width: 70, height: 70 }} />
+ 
         <View>
-        <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
-          <Text>Ikä: {laskeIka(item.spaiva)} {""}</Text>
-          <Text>Pituus: {arvioituPituus(kuukausiIka(item.spaiva))}cm</Text>
-          </View>
-        </ListItem>
-        
+            <View>
+              <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
+              <ListItem.Subtitle>{laskeIka(item.spaiva * 1.0)}v,  pituus noin {arvioituPituus(kuukausiIka(item.spaiva))}cm</ListItem.Subtitle>
+            </View>
         </View>
+        
+
       </ListItem>
+      </TouchableOpacity>
 
     </ListItem.Swipeable>
   );
 
   return (
-    <View style = {styles.container}>
+    <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('LisaaLapsi')}>
-      <Image 
-      source={addchild} 
-      style={styles.imgNarrow}
-      
-      />
-      </TouchableOpacity> 
-      <FlatList 
-      
+        <Image
+          source={addchild}
+          style={styles.imgNarrow}
+
+        />
+      </TouchableOpacity>
+      <FlatList
+
         keyExtractor={(item) => item.nimi}
         renderItem={renderKaikki}
         data={lapset}
