@@ -174,7 +174,8 @@ async function Asetakuva(nimi, uri) {
       
       />
       </TouchableOpacity> 
-      <FlatList
+      <FlatList 
+      
         keyExtractor={(item) => item.nimi}
         renderItem={renderKaikki}
         data={lapset}
