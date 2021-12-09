@@ -15,8 +15,6 @@ import mekko from '../assets/mekko.png'
 import db from './Tietokanta'
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 
-
-
 // export default function Lista(){
     const [vaattetkappaleet, setVaattetkappaleet] = useState([]);
 

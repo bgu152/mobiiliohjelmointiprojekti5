@@ -4,8 +4,6 @@ import { NavigationContainer} from'@react-navigation/native';
 import { createStackNavigator} from'@react-navigation/stack';
 import { getHeaderTitle } from '@react-navigation/elements';
 
-
-
 import Lisaa2 from './Lisaa2';
 import Haku from './Haku';
 import Koti from './Koti';
@@ -13,9 +11,7 @@ import Lapset from './Lapset';
 import LisaaLapsi from './LisaaLapsi';
 import Kuvat from './Kuvat';
 
-
 const Stack = createStackNavigator();
-
 
 export default function App() {
 return (

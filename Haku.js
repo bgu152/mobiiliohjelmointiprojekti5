@@ -12,8 +12,6 @@ import { Picker } from '@react-native-community/picker';
 import { Dimensions } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 
-
-
 import styles from './styles';
 import db from './komponentit/Tietokanta';
 import takki from './assets/takki.png';
@@ -34,7 +32,7 @@ export default function Haku({ route, navigation }) {
   const [vaatekappaleet, setVaatekappaleet] = useState([]);
 
   useEffect(() => {
-    if(isFocused){
+    if (isFocused) {
       ListaaVaatteet();
       ListaaLapset();
       ListaaKategoriat()
@@ -63,7 +61,6 @@ export default function Haku({ route, navigation }) {
     });
     setLapset(lista);
   };
-
 
   async function ListaaVaatteet() {
     let lista = [];
@@ -147,8 +144,6 @@ export default function Haku({ route, navigation }) {
     </ListItem.Swipeable>
   );
 
-
-
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -174,7 +169,6 @@ export default function Haku({ route, navigation }) {
     }
   };
 
-
   async function deleteFromDatabase(id) {
     await deleteDoc(doc(db, 'vaatekappaleet', id));
     updateVaatekappaleet();
@@ -196,7 +190,6 @@ export default function Haku({ route, navigation }) {
       }
     );
 
-
   return (
     <View style={styles.container}>
 
@@ -205,7 +198,7 @@ export default function Haku({ route, navigation }) {
         <Picker
           enabled={true}
           mode="dropdown"
-          onValueChange={(itemValue) => setKategoriainput(itemValue) }
+          onValueChange={(itemValue) => setKategoriainput(itemValue)}
           selectedValue={kategoriainput}
         >
           {kategoriat.map((item) => <Picker.Item
@@ -215,7 +208,6 @@ export default function Haku({ route, navigation }) {
           )}
           <Picker.Item label="Kaikki vaatekategoriat" value="" id="1" />
         </Picker>
-
 
         <Picker
           enabled={true}
@@ -250,7 +242,7 @@ export default function Haku({ route, navigation }) {
             borderWidth: 2,
             borderColor: 'grey',
             borderRadius: 5,
-            
+
             width: 370,
           }}
 
@@ -268,8 +260,6 @@ export default function Haku({ route, navigation }) {
         renderItem={renderKaikki}
         data={vaatekappaleet}
       />
-
-
     </View>
   );
 }

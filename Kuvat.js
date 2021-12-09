@@ -16,7 +16,7 @@ export default function Kuvat({ route, navigation }) {
   }, []);
 
   const askCameraPermission = async () => {
-    const { status } = await Camera.requestMicrophonePermissionsAsync();
+    const { status } = await Camera.requestCameraPermissionsAsync();
     setPermission(status == 'granted');
   }
 

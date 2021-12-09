@@ -57,9 +57,10 @@ export default function Lapset({ navigation }) {
          },
          {
           text: "Kyllä",          
-          onPress: () => deleteFromDatabase(nimi),
+          onPress: () => Asetakuva(nimi, result.uri),
          }
         ]);
+      setImage(result.uri);
     }
   };
 
@@ -111,9 +112,9 @@ async function Asetakuva(nimi, uri) {
     ListaaLapset()
   }
 
-  async function deleteFromDatabase(nimi) {
-    console.log('deleteting: ' + nimi);
-    await deleteDoc(doc(db, 'lapset', nimi));
+  async function deleteFromDatabase(id) {
+    console.log('deleteting: ' + id);
+    await deleteDoc(doc(db, 'lapset', id));
     updateLapset();
   }
 
@@ -130,7 +131,6 @@ async function Asetakuva(nimi, uri) {
        }
       ]);
   };
-  
 
   const renderKaikki = ({ item }) => (
     <ListItem.Swipeable
@@ -147,7 +147,7 @@ async function Asetakuva(nimi, uri) {
     >
       <ListItem style={styles.listcontainer} bottomDivider>
         <TouchableOpacity onPress = {() => pickImage(item.nimi)}>
-        <Avatar rounded source={{ uri: item.kuvalinkki }} defaulSource={lapsilogo} style={{ width: 70, height: 70 }} />
+        <Avatar rounded source={{ uri: item.kuvalinkki }} defaultSource={lapsilogo} style={{ width: 70, height: 70 }} />
         </TouchableOpacity>         
         
         <View>        
@@ -182,14 +182,3 @@ async function Asetakuva(nimi, uri) {
     </View>
   );
 }
-
-
-
-
-
-
-
-
-
-
-

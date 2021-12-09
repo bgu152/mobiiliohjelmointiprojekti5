@@ -24,7 +24,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
     }
 
     const kategoriat = [
-        { kategoria: 'muu', id: 0 },
+        { kategoria: 'Valitse vaatekategoria', id: 0 },
         { kategoria: 'housut', id: 1 },
         { kategoria: 'takki', id: 2 },
         { kategoria: 'pusero', id: 5 },
@@ -32,6 +32,8 @@ const LisaaVaatekappale = ({ route, navigation }) => {
         { kategoria: 'haalari', id: 7 },
         { kategoria: 'mekko', id: 8 },
         { kategoria: 'paita', id: 9 },
+        
+        { kategoria: 'muu', id: 10 },
     ];
     const [lapset, setLapset] = useState([]);
 
@@ -96,14 +98,9 @@ const LisaaVaatekappale = ({ route, navigation }) => {
 
             <Text style={styles.sivuotsikko}>Tallenna vaatekappale</Text>
 
-            <View style={styles.napitRivissa} >
 
-            <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vaatekategoria</Text></View>
-
-            <View style = {styles.pickerBoksi}>
 
             <Picker
-                style={styles.picker}
                 enabled={true}
                 onValueChange={formik.handleChange('kategoria')}
                 selectedValue={formik.values.kategoria}
@@ -114,14 +111,7 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                     key={item.id.toString()} />
                 )}
             </Picker>
-            </View>
-            </View>
-            <View style={styles.napitRivissa}>
-
-                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Kenen </Text></View>
-                    <View style = {styles.pickerBoksi}>
                 <Picker
-                    style={styles.picker}
                     enabled={true}
                     onValueChange={formik.handleChange('lapsi')}
                     selectedValue={formik.values.lapsi}
@@ -131,27 +121,20 @@ const LisaaVaatekappale = ({ route, navigation }) => {
                         value={item.nimi}
                         key={item.nimi} />
                     )}
+                    <Picker.Item label="Valitse vaatteen käyttäjä" value="" id="1" />
                 </Picker>
-                </View>
-            </View>
-            <View style={styles.napitRivissa}>
 
-                <View style={styles.pickertekstiBoksi}><Text style={styles.pickerTeksti}>Vuodenajalle</Text></View>
-
-                        <View style = {styles.pickerBoksi}>
                 <Picker
-                    style={styles.picker}
                     enabled={true}
                     onValueChange={formik.handleChange('vuodenajalle')}
                     selectedValue={formik.values.vuodenajalle}
                 >
-                    <Picker.Item label="Kaikki" value="kaikki" id="1" />
-                    <Picker.Item label="Talvi" value="talvi" id="2" />
-                    <Picker.Item label="Kesä" value="kesa" id="3" />
-                    <Picker.Item label="Syksy / kevät" value="syksy_kevat" id="4" />
+                    <Picker.Item label="Kaikille vuodenajoille" value="kaikki" id="1" />
+                    <Picker.Item label="Valitse mille vuodenajalle" value="kaikki" id="2" />
+                    <Picker.Item label="Talvi" value="talvi" id="3" />
+                    <Picker.Item label="Kesä" value="kesa" id="4" />
+                    <Picker.Item label="Syksy / kevät" value="syksy_kevat" id="5" />
                 </Picker>
-                </View>
-            </View>
 
             <View>
             

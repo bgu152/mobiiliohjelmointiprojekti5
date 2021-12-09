@@ -8,7 +8,6 @@ import 'firebase/firestore';
 import { Input, Button, ListItem, Header, Avatar } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 
-
 export default function docToArrayElement(doc) {
     let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '' };
     if (doc.data()) {
@@ -31,5 +30,3 @@ export default function docToArrayElement(doc) {
     }
     return uusiVaatekappale;
     }
-
-
