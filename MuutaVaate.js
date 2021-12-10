@@ -203,7 +203,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
 
             </View>
-            <Image source={{ uri: kuvalinkki }} style={{ flex: 1, marginTop: 10 }} />
+            <Image source={{ uri: kuvalinkki }} style={{ flex: 1, marginTop: 10,marginLeft: '10%',width:'80%' }} />
         </View>
     )
 }

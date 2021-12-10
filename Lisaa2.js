@@ -24,27 +24,27 @@ export default function LisaaVaatekappale({ route, navigation }) {
     const [kuvalinkki, setKuvalinkki] = useState(null);
     const [merkki, setMerkki] = useState('');
     const isFocused = useIsFocused();
+    const [kategoriat,setKategoriat] = useState([]);
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    const kategoriat = [
-        { kategoria: 'Valitse vaatekategoria', id: 0 },
-        { kategoria: 'housut', id: 1 },
-        { kategoria: 'takki', id: 2 },
-        { kategoria: 'pusero', id: 5 },
-        { kategoria: 'hame', id: 6 },
-        { kategoria: 'haalari', id: 7 },
-        { kategoria: 'mekko', id: 8 },
-        { kategoria: 'paita', id: 9 },
-        { kategoria: 'muu', id: 10 },
-    ];
-
+    async function ListaaKategoriat() {
+        let lista = [];
+        const snapshot = await getDocs(collection(db, "vaatekategoriat"));
+        snapshot.forEach((doc) => {
+          let uusiKategoria = { kategoria: '' };
+          uusiKategoria.kategoria = doc.id;
+          lista = [...lista, uusiKategoria];
+        });
+        setKategoriat(lista);
+      };
 
 
     useEffect(() => {
-        ListaaLapset()
+        ListaaLapset();
+        ListaaKategoriat() 
     }, []);
 
     useEffect(() => {
@@ -120,8 +120,9 @@ export default function LisaaVaatekappale({ route, navigation }) {
                 {kategoriat.map((item) => <Picker.Item
                     label={capitalizeFirstLetter(item.kategoria)}
                     value={item.kategoria}
-                    key={item.id.toString()} />
+                    key={item.kategoria} />
                 )}
+                <Picker.Item label="Kategoria" value="" id="1" />
             </Picker>
             
             <Picker
@@ -134,7 +135,7 @@ export default function LisaaVaatekappale({ route, navigation }) {
                     value={item.nimi}
                     key={item.nimi} />
                 )}
-                <Picker.Item label="Valitse vaatteen käyttäjä" value="" id="1" />
+                <Picker.Item label="Käyttäjä" value="" id="1" />
             </Picker>
 
             <Picker
@@ -143,7 +144,7 @@ export default function LisaaVaatekappale({ route, navigation }) {
                 selectedValue={formik.values.vuodenajalle}
             >
                 <Picker.Item label="Kaikille vuodenajoille" value="kaikki" id="1" />
-                <Picker.Item label="Valitse mille vuodenajalle" value="kaikki" id="2" />
+                <Picker.Item label="Vuodenajalle" value="kaikki" id="2" />
                 <Picker.Item label="Talvi" value="talvi" id="3" />
                 <Picker.Item label="Kesä" value="kesa" id="4" />
                 <Picker.Item label="Syksy / kevät" value="syksy_kevat" id="5" />

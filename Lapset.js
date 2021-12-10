@@ -110,9 +110,13 @@ export default function Lapset({ navigation }) {
     let tanaan = new Date();
     let x = kuukausia(tanaan.getTime()*1.0); //tänään kuukausisas unix time
     let x_0 = kuukausia(spaiva); //mittauspvm unix time
-    let x_1 = kuukausia(mittauspvm); //mittauspvm unix time
-    return (f(x-x_0)-f(x_1-x_0) + pituus* 1.0).toFixed(0);
-    
+    if (pituus){
+      let x_1 = kuukausia(mittauspvm); //mittauspvm unix time
+      return (g(x-x_0)-g(x_1-x_0) + pituus* 1.0).toFixed(0);
+    }else{
+      return g(x-x_0).toFixed(0);
+    }
+   
   }
 
   function laskeIka(spaivaUnix) {//koodi lähteestä https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd

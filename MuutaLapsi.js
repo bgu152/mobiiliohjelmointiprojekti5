@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc} from 'firebase/firestore';
+import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { Input, Button, ListItem, Header, Avatar, SearchBar, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
@@ -27,6 +27,7 @@ export default function MuutaLapsi({ route, navigation }) {
 
     const [nimi, setNimi] = useState('');
     const [image, setImage] = useState(null);
+    const [pituus, setPituus] = useState(null);
 
     const onChange = (event, selectedDate) => {
         console.log('inside onChange');
@@ -40,6 +41,7 @@ export default function MuutaLapsi({ route, navigation }) {
         setNimi(route.params.nimi);
         setDate(new Date(route.params.spaiva * 1.0));
         setImage(route.params.kuvalinkki);
+        setPituus(route.params.pituus?route.params.pituus:pituus)
     }, []
     );
 
@@ -98,12 +100,15 @@ export default function MuutaLapsi({ route, navigation }) {
 
 
     async function UpdateLapsi() {
+        let tanaan = new Date();
         const docRef = doc(db, "lapset", nimi);
         await updateDoc(docRef, {
-          kuvalinkki: image,
-          spaiva:date.getTime().toFixed(0),
+            pituus:pituus,
+            mittauspvm:tanaan.getTime().toString(),
+            kuvalinkki: image,
+            spaiva: date.getTime().toFixed(0),
         })
-      };
+    };
 
     return (
         <View style={styles.container}>
@@ -111,12 +116,12 @@ export default function MuutaLapsi({ route, navigation }) {
                 <Image source={{ uri: image }} defaultSource={kukka} style={styles.bannerImg} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => Alert.alert('Nimeä ei voi muuttaa')}>
-            <Text style={{paddingTop:20, marginLeft: 10, fontSize: 20, color: 'black' }} >{nimi}</Text>
+                <Text style={{ paddingTop: 20, marginLeft: 10, fontSize: 20, color: 'black' }} >{nimi}</Text>
             </TouchableOpacity>
 
 
             <TouchableOpacity onPress={showDatepicker}>
-                <Text style={{paddingTop:20, marginLeft: 10, fontSize: 20, color: 'grey' }} >{dateToString(date)}</Text>
+                <Text style={{ paddingTop: 20, marginLeft: 10, fontSize: 20, color: 'grey' }} >{dateToString(date)}</Text>
             </TouchableOpacity>
 
 
@@ -132,6 +137,13 @@ export default function MuutaLapsi({ route, navigation }) {
                     />
                 )}
             </View>
+            <Input
+                style={{ paddingTop: 20, flex: 1, width: 100 }}
+                placeholder='Pituus senttimetreinä '
+                onChangeText={(text) => setPituus(text)}
+                value={pituus}
+                keyboardType="numeric"
+            />
 
             <Button
                 title='Tallenna muutokset'
@@ -155,7 +167,7 @@ export default function MuutaLapsi({ route, navigation }) {
                     marginRight: 10,
                     marginLeft: 10,
                     paddingTop: 10,
-                    width:250
+                    width: 250
                 }}
             />
 

@@ -18,6 +18,9 @@ import takki from './assets/takki.png';
 import outfit from './assets/outfit.png';
 import housut from './assets/housut.png';
 import mekko from './assets/mekko.png';
+import pusero from './assets/pusero.png';
+import hame from './assets/hame.png';
+import haalari from './assets/haalari.png';
 
 export default function Haku({ route, navigation }) {
 
@@ -165,9 +168,18 @@ export default function Haku({ route, navigation }) {
       return takki;
     } else if (item.kategoria == 'mekko') {
       return mekko;
-    } else {
+    }else if (item.kategoria == 'pusero') {
+      return pusero;
+    }else if (item.kategoria == 'hame') {
+      return hame;
+    } else if (item.kategoria == 'haalari') {
+      return haalari;
+    }else if (item.kategoria == 'neule') {
+      return pusero;
+    }else {
       return outfit;
     }
+    
   }
 
   function getAvatarKuvalla(item) {
