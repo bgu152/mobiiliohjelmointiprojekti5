@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer} from'@react-navigation/native';
 import { createStackNavigator} from'@react-navigation/stack';
 import { getHeaderTitle } from '@react-navigation/elements';
+import AppLoading from 'expo-app-loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Lisaa2 from './Lisaa2';
 import Haku from './Haku';
@@ -13,11 +15,44 @@ import Kuvat from './Kuvat';
 import MuutaLapsi from './MuutaLapsi';
 import MuutaVaatekappale from './MuutaVaate';
 import Login from './Login';
+import { UserContext } from './komponentit/userContext';
+
+
+
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
+const [tunnus,setTunnus] = useState('erik');
+const [logintiedot,setLogintiedot] = useState(null);
+
+
+const [appReady, setAppReady] = useState(false);
+
+const checkLoginCredentials = ()=>{
+  AsyncStorage.getItem('appCredentials')
+  .then((result)=> {
+    if (result !== null){
+      setLogintiedot(JSON.parse(result))
+    }else{
+      setLogintiedot(null);
+    }
+  })
+  .catch(error => console.error(error))
+}
+
+
+if (!appReady){
+  return <AppLoading
+  startAsync = {checkLoginCredentials}
+  onFinish = {()=> setAppReady(true)}
+  onError = {console.warn}
+  />
+}
+
 return (
+  <UserContext.Provider value={{tunnus:tunnus}}>
     <NavigationContainer>
       <Stack.Navigator
        screenOptions={{
@@ -64,6 +99,7 @@ return (
          <Stack.Screen name = 'Login' component ={Login}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </UserContext.Provider>
   );
 }
 
