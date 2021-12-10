@@ -1,7 +1,7 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Platform } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Platform, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, getDoc, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
 import 'firebase/firestore';
@@ -26,6 +26,18 @@ export default function Lapset({ navigation }) {
   const [lapset, setLapset] = useState([]);
   const [image, setImage] = useState(null);
   const isFocused = useIsFocused();
+
+  const showToast = (message) =>{
+    console.log('Toast clicked');
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.BOTTOM,
+        ToastAndroid.SHORT,
+        50,
+        50
+    )
+}
+
   useEffect(() => {
     if (isFocused) {ListaaLapset()}
   }, [isFocused]);
@@ -35,10 +47,19 @@ export default function Lapset({ navigation }) {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          Alert.alert('Kameraoikeudet evätty');
         }
       }
-    })();
+    })();    const showToast = (message) =>{
+      console.log('Toast clicked');
+      ToastAndroid.showWithGravityAndOffset(
+          message,
+          ToastAndroid.BOTTOM,
+          ToastAndroid.SHORT,
+          50,
+          50
+      )
+  }
   }, []);
 
   const pickImage = async (nimi) => {
@@ -73,7 +94,8 @@ export default function Lapset({ navigation }) {
     const docRef = doc(db, "lapset", nimi);
     await updateDoc(docRef, {
       kuvalinkki: uri
-    })
+    });
+    showToast('Kuva muutettu')
   };
 
   async function ListaaLapset() {
@@ -131,23 +153,6 @@ export default function Lapset({ navigation }) {
 }
 
 
-
-
-  // function laskeIka(spaivaUnix) {
-  //   let tanaan = new Date();
-  //   let spaiva = new Date(spaivaUnix);
-    
-  //   let vuodet = tanaan.getFullYear() - spaiva.getFullYear();
-    
-  //   let kuukaudet = tanaan.getMonth() - spaiva.getMonth();
-    
-  //   if (kuukaudet > 0) {
-  //     return vuodet + 'v ' + kuukaudet + 'kk';
-  //   } else {
-  //     return (vuodet - 1) + 'v ' + (12 + kuukaudet) + 'kk';
-  //   }
-  // }
-
   const updateLapset = () => {
     setLapset([]);
     ListaaLapset()
@@ -157,10 +162,11 @@ export default function Lapset({ navigation }) {
     console.log('deleteting: ' + id);
     await deleteDoc(doc(db, 'lapset', id));
     updateLapset();
+    showToast('Lapsi poistettu');
   }
 
   function poistaLapsi(nimi) {
-    Alert.alert('', 'Haluatko varmasti muuttaa lapset?', [
+    Alert.alert('', 'Haluatko varmasti muuttaa lapsen?', [
       {
         text: "Ei",
         onPress: () => null,

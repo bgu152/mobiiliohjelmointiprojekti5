@@ -1,7 +1,7 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Touchable } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Touchable, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
 import 'firebase/firestore';
@@ -29,8 +29,17 @@ export default function Haku({ route, navigation }) {
   const [kategoriat, setKategoriat] = useState([]);
   const [lapset, setLapset] = useState([]);
   const isFocused = useIsFocused();
-
   const [vaatekappaleet, setVaatekappaleet] = useState([]);
+
+  const showToast = (message) =>{
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.BOTTOM,
+        ToastAndroid.SHORT,
+        50,
+        50
+    )
+}
 
   useEffect(() => {
     if (isFocused) {
@@ -193,6 +202,7 @@ export default function Haku({ route, navigation }) {
   async function deleteFromDatabase(id) {
     await deleteDoc(doc(db, 'vaatekappaleet', id));
     updateVaatekappaleet();
+    showToast('Poistettu');
   }
 
   const poistoVarmistuksella = (id) =>

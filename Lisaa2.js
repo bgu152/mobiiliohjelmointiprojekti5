@@ -7,7 +7,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid} from 'react-native';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
@@ -17,6 +17,17 @@ import db from './komponentit/Tietokanta';
 import lisaa from './assets/lisaa.png';
 import styles from './styles';
 import { WhiteBalance } from 'expo-camera/build/Camera.types';
+
+const showToast = (message) =>{
+    console.log('Toast clicked');
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.BOTTOM,
+        ToastAndroid.SHORT,
+        50,
+        50
+    )
+}
 
 
 export default function LisaaVaatekappale({ route, navigation }) {
@@ -69,15 +80,14 @@ export default function LisaaVaatekappale({ route, navigation }) {
 
 
     async function postVaatekappale(data) {
-        if (route.params.uri) {
-            data.kuvalinkki = route.params.kuvalinkki;
-        }
+        
+            data.kuvalinkki = kuvalinkki;
 
         console.log('posting: ');
         let dataSTR = JSON.stringify(data);
         console.log(dataSTR);
         await addDoc(collection(db, 'vaatekappaleet'), data);
-        Alert.alert('Vaatekappale tallennettu');
+        showToast('Vaatekappale tallennettu');
     }
 
     const formik = useFormik({

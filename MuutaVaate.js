@@ -6,7 +6,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid} from 'react-native';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
@@ -19,6 +19,7 @@ import { WhiteBalance } from 'expo-camera/build/Camera.types';
 
 export default function MuutaVaatekappale({ route, navigation }) {
     const [nimi, setNimi] = useState(route.params.lapsi);
+    const [id, setId] = useState(route.params.id);
     const [kategoria, setKategoria] = useState(route.params.kategoria);
     const [kategoriat, setKategoriat] = useState([]);
     const [lapset, setLapset] = useState([]);
@@ -27,7 +28,19 @@ export default function MuutaVaatekappale({ route, navigation }) {
     const [kuvaus, setKuvaus] = useState(route.params.kuvaus);
     const [pituudelle, setPituudelle] = useState(route.params.pituudelle);
     const isFocused = useIsFocused();
-    const [vuodenajalle, setVuodenajalle] = useState(route.params.vuodenajalle)
+    const [vuodenajalle, setVuodenajalle] = useState(route.params.vuodenajalle);
+
+    
+    const showToast = (message) =>{
+        console.log('Toast clicked');
+        ToastAndroid.showWithGravityAndOffset(
+            message,
+            ToastAndroid.BOTTOM,
+            ToastAndroid.SHORT,
+            50,
+            50
+        )
+    }
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -72,20 +85,32 @@ export default function MuutaVaatekappale({ route, navigation }) {
         setKategoriat(lista);
     };
 
-    async function updateVaatekappale(data) {
-        const docRef = doc(db,"vaatekappaleet", route.params.id);        await updateDoc(docRef, {
-            kuvalinkki: kuvalinkki,
-            kategoria: kategoria,
-            lapsi: nimi,
-            kuvaus:kuvaus,
-            merkki:merkki,
-            pituudelle:pituudelle,
-            vuodenajalle:vuodenajalle
-          })
+    async function updateVaatekappale() {
+        const docRef = doc(db,"vaatekappaleet", id);
+
+        try{
+            await updateDoc(docRef, {
+                kuvalinkki: kuvalinkki,
+                kategoria: kategoria,
+                lapsi: nimi,
+                kuvaus:kuvaus,
+                merkki:merkki,
+                pituudelle:pituudelle,
+                vuodenajalle:vuodenajalle
+              })
+              showToast('Tallennettu')
+              navigation.goBack();
+        }catch(error){
+            console.error(error),
+            showToast('Muutoksia ei tallennettu')
+        }
+
+
         };
 
+
     return (
-        <View style={styles.container}>
+        <View style={styles.container}>            
             <Picker
                 enabled={true}
                 mode="dropdown"
@@ -178,7 +203,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
                 />
                 <Button
                     title='Tallenna'
-                    onPress={updateVaatekappale}
+                    onPress={ updateVaatekappale}
                     icon={
                         <Icon
                             name="save"

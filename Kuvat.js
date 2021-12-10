@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View,  Imag, Alert,Image  } from 'react-native';
+import { StyleSheet, Text, View,  Imag, Alert,Image, ToastAndroid  } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 
@@ -8,6 +8,16 @@ import styles from './styles';
 export default function Kuvat({ route, navigation }) {
   const [hasCameraPermission, setPermission] = useState(null);
   const [kuvalinkki, setKuvalinkki] = useState('');
+  const showToast = (message) =>{
+    console.log('Toast clicked');
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.TOP,
+        ToastAndroid.SHORT,
+        50,
+        50
+    )
+}
 
   const camera = useRef(null);
 
@@ -29,9 +39,9 @@ export default function Kuvat({ route, navigation }) {
 
   function handleReturn(){
     if(kuvalinkki){
-      Alert.alert('Kuva tallennettu, muista tallentaa vaatekappale');
+      showToast('Kuva tallennettu, muista tallentaa vaatekappale');
       navigation.navigate(route.params.goBackDestination);
-    }else{Alert.alert('Kuvaa ei otettu');
+    }else{showToast('Kuvaa ei otettu');
     }
       navigation.navigate(route.params.goBackDestination,{kuvalinkki:kuvalinkki});
   }
