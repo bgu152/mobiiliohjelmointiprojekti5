@@ -104,7 +104,8 @@ export default styles = StyleSheet.create({
       padding:20
     },
     images:{
-      width :  400,
+      width :  180,
+      height: 150
     },
   
     kuvateksti:{

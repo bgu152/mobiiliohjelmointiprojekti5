@@ -118,10 +118,6 @@ export default function LisaaVaatekappale({ route, navigation }) {
 
 
 
-            <Text style={styles.sivuotsikko}>Tallenna vaatekappale</Text>
-
-
-
             <Picker
                 enabled={true}
                 onValueChange={formik.handleChange('kategoria')}

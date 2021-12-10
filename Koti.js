@@ -16,18 +16,25 @@ import lisaalogo from './assets/lisaalogo.png';
 import children from './assets/children.png';
 import styles from './styles';
 import addchild from './assets/addchild.png';
+import login from './assets/login.png';
 
 
-export default function Koti({ navigation }) {
+export default function Koti({ route,navigation }) {
   return (
     <View style = {styles.container}>
 
       <View style ={{paddingTop:40}}>
 
+        <View style = {styles.imageFlex}>
+      
+      <TouchableOpacity onPress={() => navigation.navigate('Login')} > 
+      <Image style = {styles.images} source ={login}/>  
+      </TouchableOpacity>
       
       <TouchableOpacity onPress={() => navigation.navigate('Haku')} > 
       <Image style = {styles.images} source ={hakulogo}/>  
       </TouchableOpacity>
+      </View>
 
      <TouchableOpacity  onPress={() => navigation.navigate('Lapset')} >      
       <Image style = {styles.images} source ={children}/>

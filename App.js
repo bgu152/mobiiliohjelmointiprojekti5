@@ -12,6 +12,7 @@ import LisaaLapsi from './LisaaLapsi';
 import Kuvat from './Kuvat';
 import MuutaLapsi from './MuutaLapsi';
 import MuutaVaatekappale from './MuutaVaate';
+import Login from './Login';
 
 const Stack = createStackNavigator();
 
@@ -22,17 +23,45 @@ return (
        screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'white',
-        headerStyle: { backgroundColor: '#73a657' },
+        headerStyle: 
+        { backgroundColor: '#73a657',},
+        headerTitleStyle: {
+          fontSize: 25,
+        },
       }}      
       >
-        <Stack.Screen name = 'Koti' component ={Koti}/>
-        <Stack.Screen name = 'Haku' component ={Haku}/>
-        <Stack.Screen name = 'Lisaa2' component ={Lisaa2}/>
-        <Stack.Screen name = 'Lapset' component ={Lapset}/>
-        <Stack.Screen name = 'LisaaLapsi' component ={LisaaLapsi}/>
-        <Stack.Screen name = 'Kuvat' component ={Kuvat}/>
-        <Stack.Screen name = 'MuutaLapsi' component ={MuutaLapsi}/>
-        <Stack.Screen name = 'MuutaVaatekappale' component ={MuutaVaatekappale}/>
+        <Stack.Screen name = 'Koti' component ={Koti}
+        options={{
+          title: 'Tervetuloa!',
+        }}/>
+        <Stack.Screen name = 'Haku' component ={Haku}
+        options={{
+          title: 'Hae vaatteita',
+        }}/>
+        <Stack.Screen name = 'Lisaa2' component ={Lisaa2}
+        options={{
+          title: 'Lisää vaatekappale',
+        }}
+        />
+        <Stack.Screen name = 'Lapset' component ={Lapset}
+        />
+        <Stack.Screen name = 'LisaaLapsi' component ={LisaaLapsi}
+        options={{
+          title: 'Tallenna lapsen tiedot',
+        }}/>
+        <Stack.Screen name = 'Kuvat' component ={Kuvat}
+        options={{
+          title: 'Ota kuva ja tallenna',
+        }}/>
+        <Stack.Screen name = 'MuutaLapsi' component ={MuutaLapsi}
+        options={{
+          title: 'Muuta lapsen tiedot',
+        }}/>
+        <Stack.Screen name = 'MuutaVaatekappale' component ={MuutaVaatekappale}
+        options={{
+          title: 'Muuta vaatteen tiedot',
+        }}/>
+         <Stack.Screen name = 'Login' component ={Login}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
