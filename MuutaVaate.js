@@ -86,7 +86,6 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sivuotsikko}>Muuta vaatekappale</Text>
             <Picker
                 enabled={true}
                 mode="dropdown"

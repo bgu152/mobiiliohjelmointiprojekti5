@@ -84,13 +84,35 @@ export default function Lapset({ navigation }) {
       uusiLapsi.nimi = doc.id;
       uusiLapsi.spaiva = doc.data().spaiva;
       uusiLapsi.kuvalinkki = doc.data().kuvalinkki;
+      uusiLapsi.mittauspvm = doc.data().mittauspvm;
+      uusiLapsi.pituus = doc.data().pituus;
       lista = [...lista, uusiLapsi];
     });
     setLapset(lista);
   };
+  function kuukausia(spaivaUnix) {//linux time to kuukausia
+    let unixIka = spaivaUnix*1.0;
+    let kuukaudet = unixIka * 1.0 / (1000 * 60 * 60 * 24 * 30.437);
+    return kuukaudet;
+  }
 
-  function arvioituPituus(x) {
-    return Math.round(-0.0008 * x * x + 0.6195 * x + 66.6144);
+  function f(x){ //f on keskimääräinen pituuskäyrä, regressioanalyysin avulla
+    return (-8.2171346347567728/1000000 *x *x *x+  1.8053364311030897/1000 * x * x + 0.4248 * x + 7.7219732064616053*10);
+  };
+  
+  function g(x){
+    if (x>210){
+      return(f(210));
+    }else{return f(x)};
+  }
+
+  function arvioituPituus(pituus, mittauspvm,spaiva) {
+    let tanaan = new Date();
+    let x = kuukausia(tanaan.getTime()*1.0); //tänään kuukausisas unix time
+    let x_0 = kuukausia(spaiva); //mittauspvm unix time
+    let x_1 = kuukausia(mittauspvm); //mittauspvm unix time
+    return (f(x-x_0)-f(x_1-x_0) + pituus* 1.0).toFixed(0);
+    
   }
 
   function laskeIka(spaivaUnix) {//koodi lähteestä https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
@@ -105,13 +127,7 @@ export default function Lapset({ navigation }) {
 }
 
 
-  function kuukausiIka(spaivaUnix) {
-    let tanaan = new Date();
-    let unixIka = tanaan.getTime().toFixed(0) - spaivaUnix*1.0;
-    let kuukaudet = unixIka * 1.0 / (1000 * 60 * 60 * 24 * 30.437);
-    return kuukaudet;
 
-  }
 
   // function laskeIka(spaivaUnix) {
   //   let tanaan = new Date();
@@ -173,7 +189,7 @@ export default function Lapset({ navigation }) {
         <View>
             <View>
               <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
-              <ListItem.Subtitle>{laskeIka(item.spaiva * 1.0)}v,  pituus noin {arvioituPituus(kuukausiIka(item.spaiva))}cm</ListItem.Subtitle>
+              <ListItem.Subtitle>{laskeIka(item.spaiva * 1.0)}v,  pituus noin {arvioituPituus(item.pituus,item.mittauspvm, item.spaiva)}cm</ListItem.Subtitle>
             </View>
         </View>
         

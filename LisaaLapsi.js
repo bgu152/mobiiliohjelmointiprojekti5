@@ -12,7 +12,7 @@ import { Picker } from '@react-native-community/picker';
 import { Dimensions } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 
 
 
@@ -28,6 +28,9 @@ export default function LisaaLapsi({ navigation }) {
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [lapsi, setLapsi] = useState({ spaiva: '', kuvalinkki: '' });
+  const [image, setImage] = useState(null);
+  const [pituus,setPituus] = useState('');
 
   const [nimi, setNimi] = useState('');
 
@@ -38,6 +41,8 @@ export default function LisaaLapsi({ navigation }) {
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
   };
+
+  const testPvm = new Date(2020,1,1);
 
   const showDatepicker = () => {
     showMode('date');
@@ -52,9 +57,7 @@ export default function LisaaLapsi({ navigation }) {
     setMode(currentMode);
   };
 
-  const [lapsi, setLapsi] = useState({ spaiva: '', kuvalinkki: '' });
 
-  const [image, setImage] = useState(null);
 
   useEffect(() => {//Kuvaoikeudet
     (async () => {
@@ -88,15 +91,21 @@ export default function LisaaLapsi({ navigation }) {
   };
 
 
-  function dateToUnixTime(pvm){
+  function dateToUnixTime(pvm) {
     return pvm.getTime().toFixed(0);
   }
+
   useEffect(() => {
     console.log('useEffect');
     console.log('nimi: ' + nimi);
     console.log('image: ' + image);
     console.log('spaiva: ' + date);
-    setLapsi({ spaiva: dateToUnixTime(date), kuvalinkki: image })
+    setLapsi({
+      spaiva: dateToUnixTime(date),
+      mittauspvm: dateToUnixTime(testPvm),
+      kuvalinkki: image,
+      pituus: pituus
+    })
     console.log('lapsi');
     console.log(lapsi);
 
@@ -115,6 +124,13 @@ export default function LisaaLapsi({ navigation }) {
         placeholder='Nimi'
         onChangeText={(text) => setNimi(text)}
         value={nimi}
+      />
+      <Input
+        style={{ paddingTop: 20, flex: 1, width: 100 }}
+        placeholder='Pituus senttimetreinä '
+        onChangeText={(text) => setPituus(text)}
+        value={pituus}
+        keyboardType="numeric"
       />
 
 
@@ -136,7 +152,7 @@ export default function LisaaLapsi({ navigation }) {
             containerStyle={{
               marginRight: 10,
               marginLeft: 10,
-              paddingTop:10
+              paddingTop: 10
             }}
           />
         </View>
@@ -153,55 +169,55 @@ export default function LisaaLapsi({ navigation }) {
       </View>
 
 
-        <Button
-          title='Valitse kuva'
-          onPress={() => pickImage()}
-          icon={
-            <Icon
-              name="image"
-              size={25}
-              color="black"
-            />}
-          titleStyle={{
-            color: 'grey'
-          }}
-          buttonStyle={{
-            backgroundColor: 'white',
-            borderWidth: 2,
-            borderColor: 'grey',
-            borderRadius: 5,
-          }}
-          containerStyle={{
-            marginRight: 10,
-            marginLeft: 10,
-            paddingTop:10
-          }}
-        />
+      <Button
+        title='Valitse kuva'
+        onPress={() => pickImage()}
+        icon={
+          <Icon
+            name="image"
+            size={25}
+            color="black"
+          />}
+        titleStyle={{
+          color: 'grey'
+        }}
+        buttonStyle={{
+          backgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: 'grey',
+          borderRadius: 5,
+        }}
+        containerStyle={{
+          marginRight: 10,
+          marginLeft: 10,
+          paddingTop: 10
+        }}
+      />
 
-        <Button
-          title='Tallenna'
-          onPress={()=> PostLapsi()}
-          icon={
-            <Icon
-              name="save"
-              size={25}
-              color="black"
-            />}
-          titleStyle={{
-            color: 'grey'
-          }}
-          buttonStyle={{
-            backgroundColor: 'white',
-            borderWidth: 2,
-            borderColor: 'grey',
-            borderRadius: 5,
-          }}
-          containerStyle={{
-            marginRight: 10,
-            marginLeft: 10,
-            paddingTop:10
-          }}
-        />
+      <Button
+        title='Tallenna'
+        onPress={() => PostLapsi()}
+        icon={
+          <Icon
+            name="save"
+            size={25}
+            color="black"
+          />}
+        titleStyle={{
+          color: 'grey'
+        }}
+        buttonStyle={{
+          backgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: 'grey',
+          borderRadius: 5,
+        }}
+        containerStyle={{
+          marginRight: 10,
+          marginLeft: 10,
+          paddingTop: 10
+        }}
+      />
 
     </View>
   );
