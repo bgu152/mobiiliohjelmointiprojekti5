@@ -23,8 +23,8 @@ export default styles = StyleSheet.create({
     },
     
     images:{
-      width : 200,
-      height : 200,
+      width : 100,
+      height : 100,
     },
     imgNarrow:{
       height:150,
@@ -105,7 +105,7 @@ export default styles = StyleSheet.create({
     },
     images:{
       width :  180,
-      height: 150
+      height: 130
     },
   
     kuvateksti:{
@@ -115,6 +115,8 @@ export default styles = StyleSheet.create({
     imageFlex:{
       flexDirection:'row',
       marginLeft:10,
+      marginBottom:50,
+      marginTop: 25,
     },
     buttonTitle :{
       color: 'grey',

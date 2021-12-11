@@ -43,7 +43,6 @@ export default function Rekisteroityminen({ route, navigation }) {
             nimi: nimi,
             salasana: salasana
         });
-
     }
 
     async function HandleLogin() {

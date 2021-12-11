@@ -14,6 +14,7 @@ import LisaaLapsi from './LisaaLapsi';
 import Kuvat from './Kuvat';
 import MuutaLapsi from './MuutaLapsi';
 import MuutaVaatekappale from './MuutaVaate';
+import MuutaKayttajaa from './MuutaKayttajaa';
 import Login from './Login';
 import Feedback from './Feedback';
 // import { UserContext } from './komponentit/userContext';
@@ -72,7 +73,7 @@ return (
          />
         <Stack.Screen name = 'Koti' component ={Koti}
         options={{
-          title: 'Vaatekaappi',
+          title: 'Komero',
         }}/>
         <Stack.Screen name = 'Haku' component ={Haku}
         options={{
@@ -107,7 +108,11 @@ return (
         }}/>
         <Stack.Screen name = 'Feedback' component ={Feedback}
          options={{
-          title: 'Feedback',
+          title: 'Palaute',
+        }}/>
+        <Stack.Screen name = 'MuutaKayttajaa' component ={MuutaKayttajaa}
+         options={{
+          title: 'Profiiliasetukset',
         }}/>
         
       </Stack.Navigator>

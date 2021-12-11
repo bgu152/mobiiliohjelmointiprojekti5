@@ -55,7 +55,7 @@ export default function MuutaLapsi({ route, navigation }) {
         setDate(new Date(route.params.spaiva * 1.0));
         setKuvalinkki(route.params.kuvalinkki?route.params.kuvalinkki:null);
         setPituus(route.params.pituus?route.params.pituus:pituus)
-    }, []
+    }, [UpdateLapsi]
     );
 
 

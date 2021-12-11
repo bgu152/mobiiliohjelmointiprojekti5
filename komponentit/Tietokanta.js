@@ -5,7 +5,6 @@ import 'firebase/firestore';
 
  import {FIREBASE_KEY } from '@env';
 
-
 const firebaseConfig = {
     apiKey: "FIREBASE_KEY",
     authDomain: "vaateappi2.firebaseapp.com",
