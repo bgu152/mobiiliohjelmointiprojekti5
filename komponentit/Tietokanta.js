@@ -3,9 +3,11 @@ import { initializeApp } from 'firebase/app';
 import { Button } from 'react-native-elements';
 import 'firebase/firestore';
 
+ import {FIREBASE_KEY } from '@env';
+
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCHvCJvYy1v12xXKXKM2mCm-XStjbmdfJQ",
+    apiKey: "FIREBASE_KEY",
     authDomain: "vaateappi2.firebaseapp.com",
     projectId: "vaateappi2",
     storageBucket: "vaateappi2.appspot.com",

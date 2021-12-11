@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 import db from './komponentit/Tietokanta';
 import Rekisteroityminen from './Rekisteroityminen';
+import {FIREBASE_KEY} from '@env'
 
 
 export default function Login({ route, navigation }) {
@@ -38,6 +39,7 @@ export default function Login({ route, navigation }) {
     }
 
     useEffect(() => {
+        console.log(FIREBASE_KEY);
         HandleRedirect();
         HaeKayttajat();
         readData();
@@ -108,6 +110,8 @@ export default function Login({ route, navigation }) {
     return (
 
         <View style={styles.container}>
+
+            <View><Text>{}</Text></View>
 
             <Input
                 placeholder='Käyttäjätunnus'
