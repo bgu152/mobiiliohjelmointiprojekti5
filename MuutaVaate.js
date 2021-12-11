@@ -113,7 +113,6 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
         };
 
-
     return (
         <View style={styles.container}>            
             <Picker
@@ -198,12 +197,12 @@ export default function MuutaVaatekappale({ route, navigation }) {
                         borderWidth: 2,
                         borderColor: 'grey',
                         borderRadius: 5,
-                        width: 170,
+                        width: 110,
                     }}
                     containerStyle={{
-                        width: 170,
-                        marginRight: 10,
-                        marginLeft: 5
+                        width: 110,
+                        marginRight: 3,
+                        marginLeft: 10
                     }}
                 />
                 <Button
@@ -222,12 +221,37 @@ export default function MuutaVaatekappale({ route, navigation }) {
                         borderWidth: 2,
                         borderColor: 'grey',
                         borderRadius: 5,
-                        width: 170,
+                        width: 110,
                     }}
                     containerStyle={{
-                        width: 170,
+                        width: 110,
+                        marginRight: 3,
+                        marginLeft: 3
+                    }}
+                />
+
+<Button
+                    title='Myyntiin'
+                    onPress={ () => Alert.alert('Tämä osa ei ole valmis')}
+                    icon={
+                        <Icon
+                            name="shop"
+                            size={25}
+                            color="black"
+                        />}
+                    titleStyle={styles.buttonTitle}
+
+                    buttonStyle={{
+                        backgroundColor: 'white',
+                        borderWidth: 2,
+                        borderColor: 'grey',
+                        borderRadius: 5,
+                        width: 110,
+                    }}
+                    containerStyle={{
+                        width: 110,
                         marginRight: 10,
-                        marginLeft: 5
+                        marginLeft: 3
                     }}
                 />
 

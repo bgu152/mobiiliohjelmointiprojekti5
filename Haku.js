@@ -22,6 +22,7 @@ import pusero from './assets/pusero.png';
 import hame from './assets/hame.png';
 import haalari from './assets/haalari.png';
 import paita from './assets/paita.png';
+import myyntiin from './assets/myyntiin.png';
 import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
 

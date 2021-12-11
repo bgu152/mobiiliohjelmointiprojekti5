@@ -100,7 +100,7 @@ return (
         }}/>
         <Stack.Screen name = 'MuutaVaatekappale' component ={MuutaVaatekappale}
         options={{
-          title: 'Muuta vaatteen tiedot',
+          title: 'Vaatten tiedot',
         }}/>
         <Stack.Screen name = 'Rekisteroityminen' component ={Rekisteroityminen}
          options={{
