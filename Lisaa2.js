@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { Picker } from '@react-native-community/picker'
@@ -7,19 +7,19 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid} from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid } from 'react-native';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
 import { useIsFocused } from "@react-navigation/native";
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
 import db from './komponentit/Tietokanta';
 import lisaa from './assets/lisaa.png';
 import styles from './styles';
 import { WhiteBalance } from 'expo-camera/build/Camera.types';
 
-const showToast = (message) =>{
-    console.log('Toast clicked');
+const showToast = (message) => {
     ToastAndroid.showWithGravityAndOffset(
         message,
         ToastAndroid.BOTTOM,
@@ -29,13 +29,13 @@ const showToast = (message) =>{
     )
 }
 
-
-export default function LisaaVaatekappale({ route, navigation }) {
+export default function Kirjautuminen({ route, navigation }) {
+    const tunnus = useContext(tunnusContext);
     const [lapset, setLapset] = useState([]);
     const [kuvalinkki, setKuvalinkki] = useState(null);
     const [merkki, setMerkki] = useState('');
     const isFocused = useIsFocused();
-    const [kategoriat,setKategoriat] = useState([]);
+    const [kategoriat, setKategoriat] = useState([]);
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -45,29 +45,30 @@ export default function LisaaVaatekappale({ route, navigation }) {
         let lista = [];
         const snapshot = await getDocs(collection(db, "vaatekategoriat"));
         snapshot.forEach((doc) => {
-          let uusiKategoria = { kategoria: '' };
-          uusiKategoria.kategoria = doc.id;
-          lista = [...lista, uusiKategoria];
+            let uusiKategoria = { kategoria: '' };
+            uusiKategoria.kategoria = doc.id;
+            lista = [...lista, uusiKategoria];
         });
         setKategoriat(lista);
-      };
+    };
 
 
     useEffect(() => {
         ListaaLapset();
-        ListaaKategoriat() 
+        ListaaKategoriat()
     }, []);
 
     useEffect(() => {
-        if (isFocused ) {
-            setKuvalinkki(route.params.kuvalinkki?route.params.kuvalinkki:null)
+        if (isFocused) {
+            setKuvalinkki(route.params.kuvalinkki ? route.params.kuvalinkki : null)
         }
     })
 
 
     async function ListaaLapset() {
         let lista = [];
-        const snapshot = await getDocs(collection(db, "lapset"));
+        let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+        const snapshot = await getDocs(collection(db, kokoelma));
         snapshot.forEach((doc) => {
             let uusiLapsi = { nimi: '', spaiva: '' };
             uusiLapsi.nimi = doc.id;
@@ -80,13 +81,13 @@ export default function LisaaVaatekappale({ route, navigation }) {
 
 
     async function postVaatekappale(data) {
-        
-            data.kuvalinkki = kuvalinkki;
 
+        data.kuvalinkki = kuvalinkki;
+        let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
         console.log('posting: ');
         let dataSTR = JSON.stringify(data);
         console.log(dataSTR);
-        await addDoc(collection(db, 'vaatekappaleet'), data);
+        await addDoc(collection(db, kokoelma), data);
         showToast('Vaatekappale tallennettu');
     }
 
@@ -109,14 +110,12 @@ export default function LisaaVaatekappale({ route, navigation }) {
             console.log('inside formic');
             console.log(JSON.stringify(values));
             postVaatekappale(values);
+            navigation.navigate('Haku');
         }
     });
 
     return (
         <View style={styles.container}>
-
-
-
 
             <Picker
                 enabled={true}
@@ -130,7 +129,7 @@ export default function LisaaVaatekappale({ route, navigation }) {
                 )}
                 <Picker.Item label="Kategoria" value="" id="1" />
             </Picker>
-            
+
             <Picker
                 enabled={true}
                 onValueChange={formik.handleChange('lapsi')}
@@ -180,7 +179,7 @@ export default function LisaaVaatekappale({ route, navigation }) {
 
                 <Button
                     title='Ota kuva'
-                    onPress={() => navigation.navigate('Kuvat',{goBackDestination: 'Lisaa2'})}
+                    onPress={() => navigation.navigate('Kuvat', { goBackDestination: 'Lisaa2' })}
                     icon={
                         <Icon
                             name="camera"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Picker } from '@react-native-community/picker'
 import { initializeFirestore } from '@firebase/firestore';
@@ -16,8 +16,11 @@ import db from './komponentit/Tietokanta';
 import lisaa from './assets/lisaa.png';
 import styles from './styles';
 import { WhiteBalance } from 'expo-camera/build/Camera.types';
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
+
 
 export default function MuutaVaatekappale({ route, navigation }) {
+    const tunnus = useContext(tunnusContext);
     const [nimi, setNimi] = useState(route.params.lapsi);
     const [id, setId] = useState(route.params.id);
     const [kategoria, setKategoria] = useState(route.params.kategoria);
@@ -64,7 +67,8 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
     async function ListaaLapset() {
         let lista = [];
-        const snapshot = await getDocs(collection(db, "lapset"));
+        let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+        const snapshot = await getDocs(collection(db, kokoelma));
         snapshot.forEach((doc) => {
             let uusiLapsi = { nimi: '', spaiva: '' };
             uusiLapsi.nimi = doc.id;
@@ -86,7 +90,8 @@ export default function MuutaVaatekappale({ route, navigation }) {
     };
 
     async function updateVaatekappale() {
-        const docRef = doc(db,"vaatekappaleet", id);
+        let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
+        const docRef = doc(db,kokoelma, id);
 
         try{
             await updateDoc(docRef, {

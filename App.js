@@ -15,10 +15,10 @@ import Kuvat from './Kuvat';
 import MuutaLapsi from './MuutaLapsi';
 import MuutaVaatekappale from './MuutaVaate';
 import Login from './Login';
-import { UserContext } from './komponentit/userContext';
-
-
-
+import Feedback from './Feedback';
+// import { UserContext } from './komponentit/userContext';
+import {TunnusTarjoaja } from './komponentit/userContext';
+import Rekisteroityminen from './Rekisteroityminen';
 
 
 const Stack = createStackNavigator();
@@ -52,7 +52,7 @@ if (!appReady){
 }
 
 return (
-  <UserContext.Provider value={{tunnus:tunnus}}>
+  <TunnusTarjoaja>
     <NavigationContainer>
       <Stack.Navigator
        screenOptions={{
@@ -65,9 +65,14 @@ return (
         },
       }}      
       >
+         <Stack.Screen name = 'Login' component ={Login}
+         options={{
+          title: 'Tervetuloa!',
+        }}
+         />
         <Stack.Screen name = 'Koti' component ={Koti}
         options={{
-          title: 'Tervetuloa!',
+          title: 'Vaatekaappi',
         }}/>
         <Stack.Screen name = 'Haku' component ={Haku}
         options={{
@@ -96,10 +101,18 @@ return (
         options={{
           title: 'Muuta vaatteen tiedot',
         }}/>
-         <Stack.Screen name = 'Login' component ={Login}/>
+        <Stack.Screen name = 'Rekisteroityminen' component ={Rekisteroityminen}
+         options={{
+          title: 'Rekisteröityminen',
+        }}/>
+        <Stack.Screen name = 'Feedback' component ={Feedback}
+         options={{
+          title: 'Feedback',
+        }}/>
+        
       </Stack.Navigator>
     </NavigationContainer>
-    </UserContext.Provider>
+    </TunnusTarjoaja>
   );
 }
 

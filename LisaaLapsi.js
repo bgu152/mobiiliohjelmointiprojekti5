@@ -1,6 +1,6 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ToastAndroid} from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
@@ -13,6 +13,7 @@ import { Dimensions } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
 import kukka from './assets/kukka.png';
 import styles from './styles';
@@ -20,6 +21,8 @@ import db from './komponentit/Tietokanta';
 import asetaKuva from './assets/asetaKuva.png';
 
 export default function LisaaLapsi({ navigation }) {
+
+  const tunnus = useContext(tunnusContext);
 
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
@@ -31,7 +34,6 @@ export default function LisaaLapsi({ navigation }) {
 
 
   const showToast = (message) =>{
-    console.log('Toast clicked');
     ToastAndroid.showWithGravityAndOffset(
         message,
         ToastAndroid.BOTTOM,
@@ -51,8 +53,6 @@ function getKuva(kuvalinkki, defaultkuva) {
 
 
   const onChange = (event, selectedDate) => {
-    console.log('inside onChange');
-    console.log(date);
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
@@ -100,8 +100,9 @@ function getKuva(kuvalinkki, defaultkuva) {
   };
 
   async function PostLapsi() { //lapsi lähetetään Firebase tietokantaan 
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
     try{
-      await setDoc(doc(db, 'lapset', nimi), lapsi);
+      await setDoc(doc(db, kokoelma, nimi), lapsi);
       showToast('Lapsi tallennettu');
       navigation.goBack();
     }catch(error){
@@ -133,6 +134,7 @@ function getKuva(kuvalinkki, defaultkuva) {
   }, [nimi, kuvalinkki, date])
 
   return (
+    
     <View style={styles.container}>
       <TouchableOpacity onPress={() => pickImage()}>
       <Image source={getKuva(kuvalinkki, asetaKuva)} style={{height:240, width:400}} />
@@ -152,7 +154,7 @@ function getKuva(kuvalinkki, defaultkuva) {
       />
 
       <View>
-        <View>
+      <View>
 
           <Button onPress={showDatepicker} title="Syntymäpäivä"
             icon={

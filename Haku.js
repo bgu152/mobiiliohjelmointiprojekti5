@@ -1,6 +1,6 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Touchable, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
@@ -21,9 +21,12 @@ import mekko from './assets/mekko.png';
 import pusero from './assets/pusero.png';
 import hame from './assets/hame.png';
 import haalari from './assets/haalari.png';
+import paita from './assets/paita.png';
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
+
 
 export default function Haku({ route, navigation }) {
-
+  const tunnus = useContext(tunnusContext);
   const [nimiinput, setNimiinput] = useState('');
   const [kategoriainput, setKategoriainput] = useState('');
   const [kategoriat, setKategoriat] = useState([]);
@@ -62,7 +65,8 @@ export default function Haku({ route, navigation }) {
 
   async function ListaaLapset() {
     let lista = [];
-    const snapshot = await getDocs(collection(db, "lapset"));
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+    const snapshot = await getDocs(collection(db, kokoelma));
     snapshot.forEach((doc) => {
       let uusiLapsi = { nimi: '', spaiva: '' };
       uusiLapsi.nimi = doc.id;
@@ -74,7 +78,8 @@ export default function Haku({ route, navigation }) {
 
   async function ListaaVaatteet() {
     let lista = [];
-    const vaattetRef = collection(db, "vaatekappaleet");
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
+    const vaattetRef = collection(db, kokoelma);
     var q;
     q = query(vaattetRef);
 
@@ -179,6 +184,8 @@ export default function Haku({ route, navigation }) {
       return mekko;
     }else if (item.kategoria == 'pusero') {
       return pusero;
+    }else if (item.kategoria == 'paita') {
+      return paita;
     }else if (item.kategoria == 'hame') {
       return hame;
     } else if (item.kategoria == 'haalari') {
@@ -187,8 +194,7 @@ export default function Haku({ route, navigation }) {
       return pusero;
     }else {
       return outfit;
-    }
-    
+    }    
   }
 
   function getAvatarKuvalla(item) {
@@ -200,7 +206,8 @@ export default function Haku({ route, navigation }) {
   };
 
   async function deleteFromDatabase(id) {
-    await deleteDoc(doc(db, 'vaatekappaleet', id));
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
+    await deleteDoc(doc(db, kokoelma, id));
     updateVaatekappaleet();
     showToast('Poistettu');
   }

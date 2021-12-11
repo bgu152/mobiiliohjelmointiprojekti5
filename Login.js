@@ -11,24 +11,23 @@ import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, Touchable
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
-import { useIsFocused } from "@react-navigation/native";
-
-import db from './komponentit/Tietokanta';
-import { UserContext } from './komponentit/userContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
+import db from './komponentit/Tietokanta';
+import Rekisteroityminen from './Rekisteroityminen';
 
-const Login = ({ route, navigation }) => {
-    const [tunnus, setTunnus] = useState('');
+
+export default function Login({ route, navigation }) {
     const [salasana, setSalasana] = useState('');
+    const [tunnusStorage, setTunnusStorage] = useState(null);
     const [kayttajat, setKayttajat] = useState([]);
     const [kayttajatSTR, setKayttajatSTR] = useState('');
 
-    const contextvalue = useContext(UserContext);
-    //  const {contextvalue, setUser} =useContext(UserContext);
+    const tunnus = useContext(tunnusContext);
+
 
     const showToast = (message) => {
-        console.log('Toast clicked');
         ToastAndroid.showWithGravityAndOffset(
             message,
             ToastAndroid.BOTTOM,
@@ -39,24 +38,40 @@ const Login = ({ route, navigation }) => {
     }
 
     useEffect(() => {
+        HandleRedirect();
         HaeKayttajat();
- 
+        readData();
     }, [])
 
     async function HandleLogin() {
-        console.log(tunnus)
-        const docRef = doc(db, "kayttajat", tunnus);
+        const docRef = doc(db, "kayttajat", tunnus.tunnusatlogin);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
             if (salasana == docSnap.data().salasana) {
                 showToast('Kirjutuminen onnistui');
-                navigation.navigate('Koti', {tunnus:tunnus});
+                tunnus.setTunnus(tunnus.tunnusatlogin);
+                let tunnusSTR = tunnus.tunnusatlogin;
+                try { 
+                    await AsyncStorage.setItem('tunnus', tunnusSTR)
+                } catch (error) { console.error(error); 
+            }
+                navigation.navigate('Koti');
             } else {
                 showToast('Tarkista salasana');
             }
         } else {
-            Alert.alert("Tarkista tunnus");
+            showToast("Tarkista tunnus");
+        }
+    }
+
+    readData = async () => {
+        try {
+            let value = await AsyncStorage.getItem('tunnus');
+            if (value!=null){
+                setTunnusStorage(value);
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -75,16 +90,29 @@ const Login = ({ route, navigation }) => {
         setKayttajatSTR(listaSTR)
     };
 
+ 
+
+    async function HandleRedirect(){
+        try{
+            let value = await AsyncStorage.getItem('tunnus');
+            if(value != null){
+                tunnus.setTunnus(value);
+                navigation.navigate('Koti');
+            }
+        }catch(error){
+            console.error(error);
+        }
+    }
+
 
     return (
-        <View style={styles.container}>
 
-            <View><Text>{contextvalue.tunnus}</Text></View>
+        <View style={styles.container}>
 
             <Input
                 placeholder='Käyttäjätunnus'
-                value={tunnus}
-                onChangeText={(text) => setTunnus(text)}
+                value={tunnus.tunnusatlogin}
+                onChangeText={(text) => tunnus.setTunnusatlogin(text)}
                 keyboardType='email-address'
             />
 
@@ -105,11 +133,27 @@ const Login = ({ route, navigation }) => {
                     borderWidth: 2,
                     borderColor: 'grey',
                     borderRadius: 5,
-                    width: 170,
                 }}
                 containerStyle={{
-                    width: 170,
                     marginRight: 10,
+                    marginLeft: 5
+                }}
+            />
+
+            <Button
+                title='Reksteröidy uudeksi käyttäjäksi'
+                onPress={() => navigation.navigate('Rekisteroityminen')}
+                titleStyle={styles.buttonTitle}
+
+                buttonStyle={{
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderColor: 'grey',
+                    borderRadius: 5,
+                }}
+                containerStyle={{
+                    marginRight: 10,
+                    marginTop: 15,
                     marginLeft: 5
                 }}
             />
@@ -117,17 +161,4 @@ const Login = ({ route, navigation }) => {
         </View>
 
     );
-
-    const MyTextInput = ({ label, ...props }) => {
-        return (
-            <View>
-                <Text>Hello</Text>
-                {isPassword && (
-                    <Text>Hello again</Text>
-                )}
-            </View>
-        )
-    };
 }
-
-export default Login;

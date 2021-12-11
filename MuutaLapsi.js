@@ -1,6 +1,6 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
@@ -13,6 +13,7 @@ import { Dimensions } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
 import kukka from './assets/kukka.png';
 import asetaKuva from './assets/asetaKuva.png';
@@ -21,7 +22,7 @@ import db from './komponentit/Tietokanta';
 import { TabRouter } from '@react-navigation/native';
 
 export default function MuutaLapsi({ route, navigation }) {
-
+    const tunnus = useContext(tunnusContext);
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -115,7 +116,8 @@ export default function MuutaLapsi({ route, navigation }) {
 
     async function UpdateLapsi() {
         let tanaan = new Date();
-        const docRef = doc(db, "lapset", nimi);
+        let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+        const docRef = doc(db, kokoelma, nimi);
         try{
             await updateDoc(docRef, {
                 pituus:pituus,

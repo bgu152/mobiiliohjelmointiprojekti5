@@ -24,7 +24,7 @@ export default styles = StyleSheet.create({
     
     images:{
       width : 200,
-      height : 200
+      height : 200,
     },
     imgNarrow:{
       height:150,
@@ -113,7 +113,8 @@ export default styles = StyleSheet.create({
     },
 
     imageFlex:{
-      flexDirection:'row'
+      flexDirection:'row',
+      marginLeft:10,
     },
     buttonTitle :{
       color: 'grey',

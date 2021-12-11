@@ -1,6 +1,6 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Platform, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, getDoc, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
@@ -20,12 +20,14 @@ import db from './komponentit/Tietokanta';
 import { findFocusedRoute } from '@react-navigation/core';
 import { useIsFocused } from "@react-navigation/native";
 
+import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
 export default function Lapset({ navigation }) {
 
   const [lapset, setLapset] = useState([]);
   const [image, setImage] = useState(null);
   const isFocused = useIsFocused();
+  const tunnus = useContext(tunnusContext);
 
   const showToast = (message) =>{
     console.log('Toast clicked');
@@ -87,11 +89,10 @@ export default function Lapset({ navigation }) {
     }
   };
 
-
-
   async function Asetakuva(nimi, uri) {
     console.log(uri);
-    const docRef = doc(db, "lapset", nimi);
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+    const docRef = doc(db, kokoelma, nimi);
     await updateDoc(docRef, {
       kuvalinkki: uri
     });
@@ -99,8 +100,9 @@ export default function Lapset({ navigation }) {
   };
 
   async function ListaaLapset() {
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
     let lista = [];
-    const snapshot = await getDocs(collection(db, "lapset"));
+    const snapshot = await getDocs(collection(db, kokoelma));
     snapshot.forEach((doc) => {
       let uusiLapsi = { nimi: '', spaiva: '', kuvalinkki: '' };
       uusiLapsi.nimi = doc.id;
@@ -160,7 +162,8 @@ export default function Lapset({ navigation }) {
 
   async function deleteFromDatabase(id) {
     console.log('deleteting: ' + id);
-    await deleteDoc(doc(db, 'lapset', id));
+    let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
+    await deleteDoc(doc(db, kokoelma, id));
     updateLapset();
     showToast('Lapsi poistettu');
   }
