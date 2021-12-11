@@ -244,7 +244,7 @@ export default function Haku({ route, navigation }) {
             value={item.kategoria}
             key={item.kategoria.toString()} />
           )}
-          <Picker.Item label="Kaikki vaatekategoriat" value="" id="1" />
+          <Picker.Item label="Vaatekategoria" value="" id="1" />
         </Picker>
 
         <Picker

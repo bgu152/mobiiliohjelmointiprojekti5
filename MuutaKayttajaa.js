@@ -32,7 +32,7 @@ export default function MuutaKayttajaa({ route, navigation }) {
 
     useEffect(() => {
         getKayttaja();
-    })
+    },[])
 
     async function getKayttaja() {
         const docRef = doc(db, "kayttajat", tunnus.tunnus);
@@ -95,21 +95,20 @@ export default function MuutaKayttajaa({ route, navigation }) {
                 placeholder='Nimi'
                 value={uusiNimi}
                 onChangeText={(text) => setUusiNimi(text)}
-                keyboardType='email-address'
             />
 
             <Input
                 placeholder='Uusi salasana'
+                secureTextEntry={true}
                 value={uusiSalasana}
                 onChangeText={(text) => setUusiSalasana(text)}
-                keyboardType='email-address'
             />
 
             <Input
                 placeholder='Nykyinen salasana'
+                secureTextEntry={true}
                 value={nykyinenSalasana}
                 onChangeText={(text) => setNykyinenSalasana(text)}
-                keyboardType='email-address'
             />
 
             <Button
