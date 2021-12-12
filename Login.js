@@ -120,7 +120,7 @@ export default function Login({ route, navigation }) {
                         color: 'black',
                         paddingBottom: 40
                     }}
-                >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuuta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
+                >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuutta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
                 </Text>
             </View>
 

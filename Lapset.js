@@ -9,8 +9,6 @@ import { Input, Button, ListItem, Header, Avatar } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
 
-
-
 import styles from './styles';
 import addchild from './assets/addchild.png';
 import mekko from './assets/mekko.png';
