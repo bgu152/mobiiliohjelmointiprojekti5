@@ -41,7 +41,7 @@ export default function Login({ route, navigation }) {
     useEffect(() => {
         HandleRedirect();
         HaeKayttajat();
-        readData();        
+        readData();
     }, [])
 
     async function HandleLogin() {
@@ -113,15 +113,15 @@ export default function Login({ route, navigation }) {
 
             <View>
                 <Text
-                style={{
-                    paddingTop: 20,
-                    marginLeft: 10,
-                    fontSize: 20,
-                    color: 'black',
-                    paddingBottom: 40
-                }}
-            >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuuta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
-            </Text>
+                    style={{
+                        paddingTop: 20,
+                        marginLeft: 10,
+                        fontSize: 20,
+                        color: 'black',
+                        paddingBottom: 40
+                    }}
+                >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuuta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
+                </Text>
             </View>
 
             <Input

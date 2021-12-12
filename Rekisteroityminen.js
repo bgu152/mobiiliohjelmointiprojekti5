@@ -45,9 +45,9 @@ export default function Rekisteroityminen({ route, navigation }) {
         });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         Alert.alert('Lue varoitusteksti huolella!');
-    },[])
+    }, [])
 
     async function HandleLogin() {
         const docRef = doc(db, "kayttajat", uusiTunnus);

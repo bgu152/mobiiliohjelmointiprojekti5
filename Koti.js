@@ -23,21 +23,19 @@ import feedback from './assets/feedback.png';
 import kauppa from './assets/kauppa.png';
 import kayttaja from './assets/kayttaja.png';
 
-
-
 export default function Koti({ route, navigation }) {
   const tunnus = useContext(tunnusContext);
 
   const showToast = (message) => {
     ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.BOTTOM,
-        ToastAndroid.SHORT,
-        50,
-        50
+      message,
+      ToastAndroid.BOTTOM,
+      ToastAndroid.SHORT,
+      50,
+      50
     )
-}
-  
+  }
+
   return (
 
     <View style={styles.container}>
@@ -50,31 +48,31 @@ export default function Koti({ route, navigation }) {
             <Image style={styles.images} source={hakulogo} />
           </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Lapset')} >
-          <Image style={styles.images} source={children} />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Lapset')} >
+            <Image style={styles.images} source={children} />
+          </TouchableOpacity>
 
         </View>
         <View style={styles.imageFlex}>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Login')} >
+          <TouchableOpacity onPress={() => navigation.navigate('Login')} >
             <Image style={styles.images} source={login} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('MuutaKayttajaa')} >
             <Image style={styles.images} source={kayttaja} />
           </TouchableOpacity>
-          </View>
+        </View>
       </View>
 
       <View style={styles.imageFlex}>
 
         <TouchableOpacity onPress={() => Alert.alert('Tämä osa on työn alla.')} >
-            <Image style={styles.images} source={kauppa} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Feedback')} >
-            <Image style={styles.images} source={feedback} />
-          </TouchableOpacity>
-          </View>
+          <Image style={styles.images} source={kauppa} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Feedback')} >
+          <Image style={styles.images} source={feedback} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

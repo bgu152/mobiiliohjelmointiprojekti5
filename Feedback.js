@@ -19,7 +19,7 @@ import db from './komponentit/Tietokanta';
 import styles from './styles';
 import { WhiteBalance } from 'expo-camera/build/Camera.types';
 
-export default function Feedback() {
+export default function Feedback({ navigation, route }) {
     const [palaute, setPalaute] = useState('');
 
     const showToast = (message) => {
@@ -33,11 +33,13 @@ export default function Feedback() {
     }
 
     async function PostPalaute() {
-        
+
         await addDoc(collection(db, 'feedback'), {
-            palaute:palaute
+            palaute: palaute
         });
-        showToast('Vaatekappale tallennettu');
+        showToast('Palaute tallennettu');
+        navigation.goBack();
+
     }
 
 
@@ -45,12 +47,14 @@ export default function Feedback() {
         <View style={styles.container}>
 
             <View>
-                <Text 
-                style={{ paddingTop: 20, 
-                marginLeft: 10, 
-                fontSize: 20, 
-                color: 'black',
-                paddingBottom: 40 }}>
+                <Text
+                    style={{
+                        paddingTop: 20,
+                        marginLeft: 10,
+                        fontSize: 20,
+                        color: 'black',
+                        paddingBottom: 40
+                    }}>
                     Olen erittäin kiitollinen kaikista parannusehdotuksista!
                 </Text>
             </View>
@@ -59,8 +63,8 @@ export default function Feedback() {
                 placeholder='Vaapaamuotoinen palaute'
                 value={palaute}
                 onChangeText={(text) => setPalaute(text)}
-                multiline = {true}
-                style = {{
+                multiline={true}
+                style={{
                     paddingRight: 10,
                     lineHeight: 23,
                     flex: 2,
@@ -69,23 +73,23 @@ export default function Feedback() {
                 }}
             />
 
-<Button
-                    title='Anna palautetta'
-                    onPress={() => PostPalaute()}
+            <Button
+                title='Anna palautetta'
+                onPress={() => PostPalaute()}
 
-                    titleStyle={styles.buttonTitle}
+                titleStyle={styles.buttonTitle}
 
-                    buttonStyle={{
-                        backgroundColor: 'white',
-                        borderWidth: 2,
-                        borderColor: 'grey',
-                        borderRadius: 5,
-                    }}
-                    containerStyle={{
-                        marginRight: 10,
-                        marginLeft: 5
-                    }}
-                />
+                buttonStyle={{
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderColor: 'grey',
+                    borderRadius: 5,
+                }}
+                containerStyle={{
+                    marginRight: 10,
+                    marginLeft: 5
+                }}
+            />
         </View>
 
     )

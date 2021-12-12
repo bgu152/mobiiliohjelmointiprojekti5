@@ -27,7 +27,6 @@ export default function Haku({ route, navigation }) {
 
   useEffect(() => {
     ListaaVaatteet();
-    // ListaaLapset();
     ListaaKategoriat()
   }, []);
 
@@ -67,7 +66,6 @@ export default function Haku({ route, navigation }) {
       q = query(vaattetRef, where("lapsi", "==", nimiinput));
     } else if (kategoriainput) {
       q = query(vaattetRef, where("kategoria", "==", kategoriainput));
-      // const snapshot = await getDocs(vaattetRef);
       const snapshot = awaitcollection(db, "vaatekappaleet");
       snapshot.forEach((doc) => {
         let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '' };

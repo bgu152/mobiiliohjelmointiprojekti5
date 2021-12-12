@@ -6,7 +6,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import 'firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid} from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid } from 'react-native';
 import { Input, Button, ListItem, Header, Avatar, withTheme, Icon, } from 'react-native-elements';
 import { ButtonGroup } from 'react-native-elements/dist/buttons/ButtonGroup';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,8 +33,8 @@ export default function MuutaVaatekappale({ route, navigation }) {
     const isFocused = useIsFocused();
     const [vuodenajalle, setVuodenajalle] = useState(route.params.vuodenajalle);
 
-    
-    const showToast = (message) =>{
+
+    const showToast = (message) => {
         ToastAndroid.showWithGravityAndOffset(
             message,
             ToastAndroid.BOTTOM,
@@ -48,10 +48,10 @@ export default function MuutaVaatekappale({ route, navigation }) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     const vuodenajat = [
-        { vuodenaika: 'Kaikille vuodenajoille',value:'kaikki', id: 0 },
-        { vuodenaika: 'Talvi', value:"talvi", id: 1 },
-        { vuodenaika: 'Kesä',value:"kesa", id: 2 },
-        { vuodenaika: 'Syksy / kevät',value:"syksy_kevat", id: 5 }
+        { vuodenaika: 'Kaikille vuodenajoille', value: 'kaikki', id: 0 },
+        { vuodenaika: 'Talvi', value: "talvi", id: 1 },
+        { vuodenaika: 'Kesä', value: "kesa", id: 2 },
+        { vuodenaika: 'Syksy / kevät', value: "syksy_kevat", id: 5 }
     ];
     useEffect(() => {
         ListaaLapset();
@@ -60,7 +60,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
     useEffect(() => {
         if (isFocused) {
-            setKuvalinkki(route.params.kuvalinkki?route.params.kuvalinkki:kuvalinkki)
+            setKuvalinkki(route.params.kuvalinkki ? route.params.kuvalinkki : kuvalinkki)
         }
     })
 
@@ -90,34 +90,35 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
     async function updateVaatekappale() {
         let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
-        const docRef = doc(db,kokoelma, id);
+        const docRef = doc(db, kokoelma, id);
 
-        try{
+        try {
             await updateDoc(docRef, {
                 kuvalinkki: kuvalinkki,
                 kategoria: kategoria,
                 lapsi: nimi,
-                kuvaus:kuvaus,
-                merkki:merkki,
-                pituudelle:pituudelle,
-                vuodenajalle:vuodenajalle
-              })
-              showToast('Tallennettu')
-              navigation.goBack();
-        }catch(error){
+                kuvaus: kuvaus,
+                merkki: merkki,
+                pituudelle: pituudelle,
+                vuodenajalle: vuodenajalle
+            })
+            showToast('Tallennettu')
+            navigation.goBack();
+        } catch (error) {
             console.error(error),
-            showToast('Muutoksia ei tallennettu')
+                showToast('Muutoksia ei tallennettu')
         }
-        };
+    };
 
     return (
-        <View style={styles.container}>            
+        <View style={styles.container}>
             <Picker
                 enabled={true}
                 mode="dropdown"
-                onValueChange={(itemValue) => 
-                    {if (itemValue!="")
-                        setKategoria(itemValue)}}
+                onValueChange={(itemValue) => {
+                    if (itemValue != "")
+                        setKategoria(itemValue)
+                }}
                 selectedValue={kategoria}
             >
                 {kategoriat.map((item) => <Picker.Item
@@ -130,9 +131,10 @@ export default function MuutaVaatekappale({ route, navigation }) {
             <Picker
                 enabled={true}
                 mode="dropdown"
-                onValueChange={(itemValue) => 
-                    {if (itemValue!="")
-                        setNimi(itemValue)}}
+                onValueChange={(itemValue) => {
+                    if (itemValue != "")
+                        setNimi(itemValue)
+                }}
                 selectedValue={nimi}
             >
                 {lapset.map((item) => <Picker.Item
@@ -145,7 +147,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
             <Picker
                 enabled={true}
                 mode="dropdown"
-                onValueChange={(itemValue) => 
+                onValueChange={(itemValue) =>
                     setVuodenajalle(itemValue)}
                 selectedValue={vuodenajalle}
             >
@@ -158,7 +160,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
 
             <Input
-                style={{flex: 1, width: 100 }}
+                style={{ flex: 1, width: 100 }}
                 placeholder='Kuvaus'
                 onChangeText={(text) => setKuvaus(text)}
                 value={kuvaus}
@@ -180,7 +182,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
                 <Button
                     title='Ota kuva'
-                    onPress={() => navigation.navigate('Kuvat',{goBackDestination: 'MuutaVaatekappale'})}
+                    onPress={() => navigation.navigate('Kuvat', { goBackDestination: 'MuutaVaatekappale' })}
                     icon={
                         <Icon
                             name="camera"
@@ -204,7 +206,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
                 />
                 <Button
                     title='Tallenna'
-                    onPress={ updateVaatekappale}
+                    onPress={updateVaatekappale}
                     icon={
                         <Icon
                             name="save"
@@ -227,9 +229,9 @@ export default function MuutaVaatekappale({ route, navigation }) {
                     }}
                 />
 
-<Button
+                <Button
                     title='Myyntiin'
-                    onPress={ () => Alert.alert('Tämä osa ei ole valmis')}
+                    onPress={() => Alert.alert('Tämä osa ei ole valmis')}
                     icon={
                         <Icon
                             name="shop"
@@ -254,7 +256,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
 
             </View>
-            <Image source={{ uri: kuvalinkki }} style={{ flex: 1, marginTop: 10,marginLeft: '10%',width:'80%' }} />
+            <Image source={{ uri: kuvalinkki }} style={{ flex: 1, marginTop: 10, marginLeft: '10%', width: '80%' }} />
         </View>
     )
 }

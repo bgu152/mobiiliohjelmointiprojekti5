@@ -17,7 +17,6 @@ import MuutaVaatekappale from './MuutaVaate';
 import MuutaKayttajaa from './MuutaKayttajaa';
 import Login from './Login';
 import Feedback from './Feedback';
-// import { UserContext } from './komponentit/userContext';
 import {TunnusTarjoaja } from './komponentit/userContext';
 import Rekisteroityminen from './Rekisteroityminen';
 

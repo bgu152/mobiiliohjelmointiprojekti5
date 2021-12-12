@@ -1,6 +1,6 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where, updateDoc } from 'firebase/firestore';
@@ -30,8 +30,8 @@ export default function MuutaLapsi({ route, navigation }) {
     const [kuvalinkki, setKuvalinkki] = useState(null);
     const [pituus, setPituus] = useState(null);
 
-        
-    const showToast = (message) =>{
+
+    const showToast = (message) => {
         ToastAndroid.showWithGravityAndOffset(
             message,
             ToastAndroid.BOTTOM,
@@ -50,8 +50,8 @@ export default function MuutaLapsi({ route, navigation }) {
     useEffect(() => {
         setNimi(route.params.nimi);
         setDate(new Date(route.params.spaiva * 1.0));
-        setKuvalinkki(route.params.kuvalinkki?route.params.kuvalinkki:null);
-        setPituus(route.params.pituus?route.params.pituus:pituus)
+        setKuvalinkki(route.params.kuvalinkki ? route.params.kuvalinkki : null);
+        setPituus(route.params.pituus ? route.params.pituus : pituus)
     }, []
     );
 
@@ -67,14 +67,14 @@ export default function MuutaLapsi({ route, navigation }) {
 
     function getKuva(kuvalinkki, defaultkuva) {
         if (kuvalinkki) {
-          return { uri: kuvalinkki }
+            return { uri: kuvalinkki }
         } else {
-          return defaultkuva
+            return defaultkuva
         }
-      };
+    };
 
 
-    useEffect(() => {//Kuvaoikeudet
+    useEffect(() => {
         (async () => {
             if (Platform.OS !== 'web') {
                 const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -85,7 +85,7 @@ export default function MuutaLapsi({ route, navigation }) {
         })();
     }, []);
 
-    const pickImage = async () => { //Valitaan kuva, kuvan uri = kuvalinkki
+    const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -107,17 +107,17 @@ export default function MuutaLapsi({ route, navigation }) {
         let tanaan = new Date();
         let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
         const docRef = doc(db, kokoelma, nimi);
-        try{
+        try {
             await updateDoc(docRef, {
-                pituus:pituus,
-                mittauspvm:tanaan.getTime().toString(),
+                pituus: pituus,
+                mittauspvm: tanaan.getTime().toString(),
                 kuvalinkki: kuvalinkki,
                 spaiva: date.getTime().toFixed(0),
             });
             showToast('Muutokset tallennettu');
             navigation.goBack();
 
-        }catch(error){
+        } catch (error) {
             console.error(error);
             showToast('Muutoksia ei tallennettu')
         }

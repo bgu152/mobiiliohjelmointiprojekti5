@@ -25,7 +25,6 @@ import paita from './assets/paita.png';
 import myyntiin from './assets/myyntiin.png';
 import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 
-
 export default function Haku({ route, navigation }) {
   const tunnus = useContext(tunnusContext);
   const [nimiinput, setNimiinput] = useState('');
@@ -35,15 +34,15 @@ export default function Haku({ route, navigation }) {
   const isFocused = useIsFocused();
   const [vaatekappaleet, setVaatekappaleet] = useState([]);
 
-  const showToast = (message) =>{
+  const showToast = (message) => {
     ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.BOTTOM,
-        ToastAndroid.SHORT,
-        50,
-        50
+      message,
+      ToastAndroid.BOTTOM,
+      ToastAndroid.SHORT,
+      50,
+      50
     )
-}
+  }
 
   useEffect(() => {
     if (isFocused) {
@@ -95,7 +94,7 @@ export default function Haku({ route, navigation }) {
     const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
-      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki: '', merkki: '', vuodenajalle:''};
+      let uusiVaatekappale = { id: '', lapsi: '', pituudelle: '', kuvaus: '', kategoria: '', lisattypvm: '', kuvalinkki: '', merkki: '', vuodenajalle: '' };
       uusiVaatekappale.id = doc.id;
       if (doc.data()) {
         uusiVaatekappale.lapsi = doc.data().lapsi;
@@ -128,7 +127,6 @@ export default function Haku({ route, navigation }) {
     setVaatekappaleet(lista);
   };
 
-  // kommer att behöva i nästa MuutaVaatekappale
 
 
   const updateVaatekappaleet = () => {
@@ -183,19 +181,19 @@ export default function Haku({ route, navigation }) {
       return takki;
     } else if (item.kategoria == 'mekko') {
       return mekko;
-    }else if (item.kategoria == 'pusero') {
+    } else if (item.kategoria == 'pusero') {
       return pusero;
-    }else if (item.kategoria == 'paita') {
+    } else if (item.kategoria == 'paita') {
       return paita;
-    }else if (item.kategoria == 'hame') {
+    } else if (item.kategoria == 'hame') {
       return hame;
     } else if (item.kategoria == 'haalari') {
       return haalari;
-    }else if (item.kategoria == 'neule') {
+    } else if (item.kategoria == 'neule') {
       return pusero;
-    }else {
+    } else {
       return outfit;
-    }    
+    }
   }
 
   function getAvatarKuvalla(item) {
@@ -245,13 +243,13 @@ export default function Haku({ route, navigation }) {
             value={item.kategoria}
             key={item.kategoria.toString()} />
           )}
-          <Picker.Item label="Vaatekategoria" value="" id="1" />
+          <Picker.Item label="Kaikki vaatekategoria" value="" id="1" />
         </Picker>
 
         <Picker
           enabled={true}
           mode="dropdown"
-          onValueChange={(itemValue) => {setNimiinput(itemValue) }}
+          onValueChange={(itemValue) => { setNimiinput(itemValue) }}
           selectedValue={nimiinput}
         >
           {lapset.map((item) => <Picker.Item

@@ -29,18 +29,18 @@ export default function Lapset({ navigation }) {
   const isFocused = useIsFocused();
   const tunnus = useContext(tunnusContext);
 
-  const showToast = (message) =>{
+  const showToast = (message) => {
     ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.BOTTOM,
-        ToastAndroid.SHORT,
-        50,
-        50
+      message,
+      ToastAndroid.BOTTOM,
+      ToastAndroid.SHORT,
+      50,
+      50
     )
-}
+  }
 
   useEffect(() => {
-    if (isFocused) {ListaaLapset()}
+    if (isFocused) { ListaaLapset() }
   }, [isFocused]);
 
   useEffect(() => {
@@ -51,15 +51,15 @@ export default function Lapset({ navigation }) {
           Alert.alert('Kameraoikeudet evätty');
         }
       }
-    })();    const showToast = (message) =>{
+    })(); const showToast = (message) => {
       ToastAndroid.showWithGravityAndOffset(
-          message,
-          ToastAndroid.BOTTOM,
-          ToastAndroid.SHORT,
-          50,
-          50
+        message,
+        ToastAndroid.BOTTOM,
+        ToastAndroid.SHORT,
+        50,
+        50
       )
-  }
+    }
   }, []);
 
   const pickImage = async (nimi) => {
@@ -111,33 +111,33 @@ export default function Lapset({ navigation }) {
     });
     setLapset(lista);
   };
-  function kuukausia(spaivaUnix) {//linux time to kuukausia
-    let unixIka = spaivaUnix*1.0;
+  function kuukausia(spaivaUnix) {//unix time to kuukausia
+    let unixIka = spaivaUnix * 1.0;
     let kuukaudet = unixIka * 1.0 / (1000 * 60 * 60 * 24 * 30.437);
     return kuukaudet;
   }
 
-  function f(x){ //f on keskimääräinen pituuskäyrä, regressioanalyysin avulla
-    return (-8.2171346347567728/1000000 *x *x *x+  1.8053364311030897/1000 * x * x + 0.4248 * x + 7.7219732064616053*10);
+  function f(x) { //f on keskimääräinen pituuskäyrä, regressioanalyysin avulla
+    return (-8.2171346347567728 / 1000000 * x * x * x + 1.8053364311030897 / 1000 * x * x + 0.4248 * x + 7.7219732064616053 * 10);
   };
-  
-  function g(x){
-    if (x>210){
-      return(f(210));
-    }else{return f(x)};
+
+  function g(x) {
+    if (x > 210) {
+      return (f(210));
+    } else { return f(x) };
   }
 
-  function arvioituPituus(pituus, mittauspvm,spaiva) {
+  function arvioituPituus(pituus, mittauspvm, spaiva) {
     let tanaan = new Date();
-    let x = kuukausia(tanaan.getTime()*1.0); //tänään kuukausisas unix time
+    let x = kuukausia(tanaan.getTime() * 1.0); //tänään kuukausisas unix time
     let x_0 = kuukausia(spaiva); //mittauspvm unix time
-    if (pituus){
+    if (pituus) {
       let x_1 = kuukausia(mittauspvm); //mittauspvm unix time
-      return (g(x-x_0)-g(x_1-x_0) + pituus* 1.0).toFixed(0);
-    }else{
-      return g(x-x_0).toFixed(0);
+      return (g(x - x_0) - g(x_1 - x_0) + pituus * 1.0).toFixed(0);
+    } else {
+      return g(x - x_0).toFixed(0);
     }
-   
+
   }
 
   function laskeIka(spaivaUnix) {//koodi lähteestä https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
@@ -149,7 +149,7 @@ export default function Lapset({ navigation }) {
       ika--;
     }
     return ika;
-}
+  }
 
 
   const updateLapset = () => {
@@ -190,20 +190,20 @@ export default function Lapset({ navigation }) {
           buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
         />
       }
-    ><TouchableOpacity onPress={() => navigation.navigate('MuutaLapsi', {nimi:item.nimi, spaiva:item.spaiva, kuvalinkki:item.kuvalinkki})}>
-      <ListItem bottomDivider>
-        
+    ><TouchableOpacity onPress={() => navigation.navigate('MuutaLapsi', { nimi: item.nimi, spaiva: item.spaiva, kuvalinkki: item.kuvalinkki })}>
+        <ListItem bottomDivider>
+
           <Avatar rounded source={{ uri: item.kuvalinkki }} defaultSource={lapsilogo} style={{ width: 70, height: 70 }} />
- 
-        <View>
+
+          <View>
             <View>
               <ListItem.Title style={{ fontSize: 18 }} >{item.nimi} </ListItem.Title>
-              <ListItem.Subtitle>{laskeIka(item.spaiva * 1.0)}v,  pituus noin {arvioituPituus(item.pituus,item.mittauspvm, item.spaiva)}cm</ListItem.Subtitle>
+              <ListItem.Subtitle>{laskeIka(item.spaiva * 1.0)}v,  pituus noin {arvioituPituus(item.pituus, item.mittauspvm, item.spaiva)}cm</ListItem.Subtitle>
             </View>
-        </View>
-        
+          </View>
 
-      </ListItem>
+
+        </ListItem>
       </TouchableOpacity>
 
     </ListItem.Swipeable>

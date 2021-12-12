@@ -1,7 +1,7 @@
 import { initializeFirestore } from '@firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, useContext } from 'react';
-import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ToastAndroid} from 'react-native';
+import { Image, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ToastAndroid } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, setDoc, doc, collection, getDocs, onSnapshot, itemsSnapshot, itemsCol, addDoc, deleteDoc, query, where } from 'firebase/firestore';
 import 'firebase/firestore';
@@ -29,27 +29,27 @@ export default function LisaaLapsi({ navigation }) {
   const [show, setShow] = useState(false);
   const [lapsi, setLapsi] = useState({ spaiva: '', kuvalinkki: '' });
   const [kuvalinkki, setKuvalinkki] = useState(null);
-  const [pituus,setPituus] = useState('');
+  const [pituus, setPituus] = useState('');
   const [nimi, setNimi] = useState('');
 
 
-  const showToast = (message) =>{
+  const showToast = (message) => {
     ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.BOTTOM,
-        ToastAndroid.SHORT,
-        50,
-        50
+      message,
+      ToastAndroid.BOTTOM,
+      ToastAndroid.SHORT,
+      50,
+      50
     )
-}
-
-function getKuva(kuvalinkki, defaultkuva) {
-  if (kuvalinkki) {
-    return { uri: kuvalinkki }
-  } else {
-    return defaultkuva
   }
-};
+
+  function getKuva(kuvalinkki, defaultkuva) {
+    if (kuvalinkki) {
+      return { uri: kuvalinkki }
+    } else {
+      return defaultkuva
+    }
+  };
 
 
   const onChange = (event, selectedDate) => {
@@ -58,7 +58,7 @@ function getKuva(kuvalinkki, defaultkuva) {
     setDate(currentDate);
   };
 
-  const testPvm = new Date(2020,1,1);
+  const testPvm = new Date(2020, 1, 1);
 
   const showDatepicker = () => {
     showMode('date');
@@ -75,7 +75,7 @@ function getKuva(kuvalinkki, defaultkuva) {
 
 
 
-  useEffect(() => {//Kuvaoikeudet
+  useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -86,7 +86,7 @@ function getKuva(kuvalinkki, defaultkuva) {
     })();
   }, []);
 
-  const pickImage = async () => { //Valitaan kuva, kuvan uri = kuvalinkki
+  const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -99,18 +99,18 @@ function getKuva(kuvalinkki, defaultkuva) {
     }
   };
 
-  async function PostLapsi() { //lapsi lähetetään Firebase tietokantaan 
+  async function PostLapsi() {
     let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
-    try{
+    try {
       await setDoc(doc(db, kokoelma, nimi), lapsi);
       showToast('Lapsi tallennettu');
       navigation.goBack();
-    }catch(error){
+    } catch (error) {
       console.error(error);
       showToast('Lasta ei tallennettu')
     }
-    
-    
+
+
   };
 
   function dateToUnixTime(pvm) {
@@ -128,11 +128,11 @@ function getKuva(kuvalinkki, defaultkuva) {
   }, [nimi, kuvalinkki, date])
 
   return (
-    
+
     <View style={styles.container}>
       <TouchableOpacity onPress={() => pickImage()}>
-      <Image source={getKuva(kuvalinkki, asetaKuva)} style={{height:240, width:400}} />
-</TouchableOpacity>
+        <Image source={getKuva(kuvalinkki, asetaKuva)} style={{ height: 240, width: 400 }} />
+      </TouchableOpacity>
       <Input
         style={{ paddingTop: 20, flex: 1, width: 100 }}
         placeholder='Nimi'
@@ -148,7 +148,7 @@ function getKuva(kuvalinkki, defaultkuva) {
       />
 
       <View>
-      <View>
+        <View>
 
           <Button onPress={showDatepicker} title="Syntymäpäivä"
             icon={
