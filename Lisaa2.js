@@ -84,9 +84,7 @@ export default function Kirjautuminen({ route, navigation }) {
 
         data.kuvalinkki = kuvalinkki;
         let kokoelma = "kayttajat/" + tunnus.tunnus + "/vaatekappaleet";
-        console.log('posting: ');
         let dataSTR = JSON.stringify(data);
-        console.log(dataSTR);
         await addDoc(collection(db, kokoelma), data);
         showToast('Vaatekappale tallennettu');
     }
@@ -102,13 +100,9 @@ export default function Kirjautuminen({ route, navigation }) {
             vuodenajalle: ''
         },
         onSubmit: values => {
-            console.log(values);
             let pvm = new Date();
             let pvmSTR = pvm.getTime().toFixed(0);
-            console.log(pvmSTR);
             values.lisattypvm = pvmSTR;
-            console.log('inside formic');
-            console.log(JSON.stringify(values));
             postVaatekappale(values);
             navigation.navigate('Haku');
         }

@@ -118,18 +118,12 @@ function getKuva(kuvalinkki, defaultkuva) {
   }
 
   useEffect(() => {
-    console.log('useEffect');
-    console.log('nimi: ' + nimi);
-    console.log('kuvalinkki: ' + kuvalinkki);
-    console.log('spaiva: ' + date);
     setLapsi({
       spaiva: dateToUnixTime(date),
       mittauspvm: dateToUnixTime(testPvm),
       kuvalinkki: kuvalinkki,
       pituus: pituus
     })
-    console.log('lapsi');
-    console.log(lapsi);
 
   }, [nimi, kuvalinkki, date])
 

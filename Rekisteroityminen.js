@@ -38,12 +38,16 @@ export default function Rekisteroityminen({ route, navigation }) {
     }
 
 
-    async function setKayttaja(){
+    async function setKayttaja() {
         await setDoc(doc(db, 'kayttajat', uusiTunnus), {
             nimi: nimi,
             salasana: salasana
         });
     }
+
+    useEffect(()=>{
+        Alert.alert('Lue varoitusteksti huolella!');
+    },[])
 
     async function HandleLogin() {
         const docRef = doc(db, "kayttajat", uusiTunnus);
@@ -53,24 +57,25 @@ export default function Rekisteroityminen({ route, navigation }) {
                 showToast('Kirjutuminen onnistui');
                 tunnus.setTunnus(uusiTunnus);
                 let tunnusSTR = uusiTunnus;
-                try { 
+                try {
                     await AsyncStorage.setItem('tunnus', tunnusSTR)
-                } catch (error) { console.error(error); 
-            }
+                } catch (error) {
+                    console.error(error);
+                }
                 navigation.navigate('Koti');
 
             } else {
                 navigation.navigate('Login');
-		showToast('Kirjutuminen epäonnistui, kokeilu kirjautua tunnuksillasi');
+                showToast('Kirjutuminen epäonnistui, kokeilu kirjautua tunnuksillasi');
             }
         } else {
             navigation.navigate('Login');
-	showToast('Kirjutuminen epäonnistui, kokeilu kirjautua tunnuksillasi');
+            showToast('Kirjutuminen epäonnistui, kokeilu kirjautua tunnuksillasi');
         }
     }
 
     async function Rekisteroidy() {
-        
+
         const docRef = doc(db, 'kayttajat', uusiTunnus);
 
         await getDoc(docRef)
@@ -87,6 +92,18 @@ export default function Rekisteroityminen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
+            <View>
+                <Text
+                    style={{
+                        paddingTop: 20,
+                        marginLeft: 10,
+                        fontSize: 20,
+                        color: 'black',
+                        paddingBottom: 40
+                    }}
+                >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuuta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
+                </Text>
+            </View>
 
             <Input
                 placeholder='Nimi'

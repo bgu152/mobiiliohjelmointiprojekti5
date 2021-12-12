@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Vaateinventario",
-    "slug": "vaateinventario",
+    "name": "Komero",
+    "slug": "komero",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

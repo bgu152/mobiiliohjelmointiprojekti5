@@ -35,7 +35,6 @@ export default function MuutaVaatekappale({ route, navigation }) {
 
     
     const showToast = (message) =>{
-        console.log('Toast clicked');
         ToastAndroid.showWithGravityAndOffset(
             message,
             ToastAndroid.BOTTOM,
@@ -109,8 +108,6 @@ export default function MuutaVaatekappale({ route, navigation }) {
             console.error(error),
             showToast('Muutoksia ei tallennettu')
         }
-
-
         };
 
     return (
@@ -149,7 +146,7 @@ export default function MuutaVaatekappale({ route, navigation }) {
                 enabled={true}
                 mode="dropdown"
                 onValueChange={(itemValue) => 
-                    {console.log(itemValue);setVuodenajalle(itemValue)}}
+                    setVuodenajalle(itemValue)}
                 selectedValue={vuodenajalle}
             >
                 {vuodenajat.map((item) => <Picker.Item

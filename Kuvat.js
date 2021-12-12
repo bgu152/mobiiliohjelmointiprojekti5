@@ -9,7 +9,6 @@ export default function Kuvat({ route, navigation }) {
   const [hasCameraPermission, setPermission] = useState(null);
   const [kuvalinkki, setKuvalinkki] = useState('');
   const showToast = (message) =>{
-    console.log('Toast clicked');
     ToastAndroid.showWithGravityAndOffset(
         message,
         ToastAndroid.TOP,

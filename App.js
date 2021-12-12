@@ -25,32 +25,7 @@ import Rekisteroityminen from './Rekisteroityminen';
 const Stack = createStackNavigator();
 
 export default function App() {
-const [tunnus,setTunnus] = useState('erik');
-const [logintiedot,setLogintiedot] = useState(null);
 
-
-const [appReady, setAppReady] = useState(false);
-
-const checkLoginCredentials = ()=>{
-  AsyncStorage.getItem('appCredentials')
-  .then((result)=> {
-    if (result !== null){
-      setLogintiedot(JSON.parse(result))
-    }else{
-      setLogintiedot(null);
-    }
-  })
-  .catch(error => console.error(error))
-}
-
-
-if (!appReady){
-  return <AppLoading
-  startAsync = {checkLoginCredentials}
-  onFinish = {()=> setAppReady(true)}
-  onError = {console.warn}
-  />
-}
 
 return (
   <TunnusTarjoaja>

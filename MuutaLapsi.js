@@ -32,7 +32,6 @@ export default function MuutaLapsi({ route, navigation }) {
 
         
     const showToast = (message) =>{
-        console.log('Toast clicked');
         ToastAndroid.showWithGravityAndOffset(
             message,
             ToastAndroid.BOTTOM,
@@ -43,8 +42,6 @@ export default function MuutaLapsi({ route, navigation }) {
     }
 
     const onChange = (event, selectedDate) => {
-        console.log('inside onChange');
-        console.log(date);
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
@@ -104,14 +101,6 @@ export default function MuutaLapsi({ route, navigation }) {
     function dateToString(pvm) {
         return pvm.getDate().toFixed(0) + "." + (pvm.getMonth() + 1) + "." + pvm.getFullYear();
     }
-
-    useEffect(() => {
-        console.log('useEffect');
-        console.log('nimi: ' + nimi);
-        console.log('Spaiva: ' + date);
-        console.log('kuvalinkki: ' + kuvalinkki);
-
-    }, [nimi, date, kuvalinkki])
 
 
     async function UpdateLapsi() {

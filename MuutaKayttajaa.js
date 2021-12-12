@@ -54,11 +54,12 @@ export default function MuutaKayttajaa({ route, navigation }) {
         )
     }
 
-    async function TarkistaSalasana() {
+    function TarkistaSalasana() {
         if (nykyinenSalasana == oikeaSalasana) {
-            showToast('salasana oikein');
+            return true;
         } else {
-            showToast('salasana väärin')
+            showToast('salasana väärin');
+            return false;
         }
         return nykyinenSalasana == oikeaSalasana;
     }
@@ -79,6 +80,7 @@ export default function MuutaKayttajaa({ route, navigation }) {
         if (TarkistaSalasana()) {
             await updateDoc(dokumentti, uudetTiedot);
             showToast('Tiedot päivitetty');
+            navigation.goBack();
             return;
         };
         showToast('Tietoja ei muutettu');
@@ -89,7 +91,13 @@ export default function MuutaKayttajaa({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text>{uusiNimi}Täällä voit vaihtaa nimen ja salasanan. {nimi} {uusiSalasana} {oikeaSalasana} </Text>
+            <Text
+            style={{ paddingTop: 20, 
+                marginLeft: 10, 
+                fontSize: 20, 
+                color: 'black',
+                paddingBottom: 40 }}
+            >Täällä voit vaihtaa nimen ja salasanan. Salasana vaaditaan muutoksia varten.</Text>
 
             <Input
                 placeholder='Nimi'

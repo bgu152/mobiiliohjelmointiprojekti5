@@ -70,7 +70,7 @@ export default function Feedback() {
             />
 
 <Button
-                    title='Palauta'
+                    title='Anna palautetta'
                     onPress={() => PostPalaute()}
 
                     titleStyle={styles.buttonTitle}

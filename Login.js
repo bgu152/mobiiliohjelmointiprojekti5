@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { tunnusContext, tunnusTarjoaja } from './komponentit/userContext';
 import db from './komponentit/Tietokanta';
 import Rekisteroityminen from './Rekisteroityminen';
-import {FIREBASE_KEY} from '@env'
+import { FIREBASE_KEY } from '@env'
 
 
 export default function Login({ route, navigation }) {
@@ -39,10 +39,9 @@ export default function Login({ route, navigation }) {
     }
 
     useEffect(() => {
-        console.log(FIREBASE_KEY);
         HandleRedirect();
         HaeKayttajat();
-        readData();
+        readData();        
     }, [])
 
     async function HandleLogin() {
@@ -53,10 +52,11 @@ export default function Login({ route, navigation }) {
                 showToast('Kirjutuminen onnistui');
                 tunnus.setTunnus(tunnus.tunnusatlogin);
                 let tunnusSTR = tunnus.tunnusatlogin;
-                try { 
+                try {
                     await AsyncStorage.setItem('tunnus', tunnusSTR)
-                } catch (error) { console.error(error); 
-            }
+                } catch (error) {
+                    console.error(error);
+                }
                 navigation.navigate('Koti');
             } else {
                 showToast('Tarkista salasana');
@@ -69,7 +69,7 @@ export default function Login({ route, navigation }) {
     readData = async () => {
         try {
             let value = await AsyncStorage.getItem('tunnus');
-            if (value!=null){
+            if (value != null) {
                 setTunnusStorage(value);
             }
         } catch (error) {
@@ -92,16 +92,16 @@ export default function Login({ route, navigation }) {
         setKayttajatSTR(listaSTR)
     };
 
- 
 
-    async function HandleRedirect(){
-        try{
+
+    async function HandleRedirect() {
+        try {
             let value = await AsyncStorage.getItem('tunnus');
-            if(value != null){
+            if (value != null) {
                 tunnus.setTunnus(value);
                 navigation.navigate('Koti');
             }
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
@@ -111,7 +111,18 @@ export default function Login({ route, navigation }) {
 
         <View style={styles.container}>
 
-            <View><Text>{}</Text></View>
+            <View>
+                <Text
+                style={{
+                    paddingTop: 20,
+                    marginLeft: 10,
+                    fontSize: 20,
+                    color: 'black',
+                    paddingBottom: 40
+                }}
+            >Varoitus: Tämä appi on vielä vain demoversio eikä tietoturvallisuuta ole kehitetty. Salasanat varastoidaan selkotekstinä joten älä käytä sellaista salasanaa jota käytät missään toisessa palvelussa. Älä myöskään tallenna apille mitään henkilökohtaisia tietoja!
+            </Text>
+            </View>
 
             <Input
                 placeholder='Käyttäjätunnus'

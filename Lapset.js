@@ -30,7 +30,6 @@ export default function Lapset({ navigation }) {
   const tunnus = useContext(tunnusContext);
 
   const showToast = (message) =>{
-    console.log('Toast clicked');
     ToastAndroid.showWithGravityAndOffset(
         message,
         ToastAndroid.BOTTOM,
@@ -53,7 +52,6 @@ export default function Lapset({ navigation }) {
         }
       }
     })();    const showToast = (message) =>{
-      console.log('Toast clicked');
       ToastAndroid.showWithGravityAndOffset(
           message,
           ToastAndroid.BOTTOM,
@@ -90,7 +88,6 @@ export default function Lapset({ navigation }) {
   };
 
   async function Asetakuva(nimi, uri) {
-    console.log(uri);
     let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
     const docRef = doc(db, kokoelma, nimi);
     await updateDoc(docRef, {
@@ -161,7 +158,6 @@ export default function Lapset({ navigation }) {
   }
 
   async function deleteFromDatabase(id) {
-    console.log('deleteting: ' + id);
     let kokoelma = "kayttajat/" + tunnus.tunnus + "/lapset";
     await deleteDoc(doc(db, kokoelma, id));
     updateLapset();
