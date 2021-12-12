@@ -24,3 +24,4 @@ React native elements muun muassa nappeihin ja input kenttiin
 Ikoneja (Ant design @expo/vector-icons)
 Toasteja joilla näytetään tietoja käyttäjälle (ToastAndroid from reac native)
 Async Storage jonka avulla applikaatio muistaa käyttäjän sisäänkirjautuminen (@react-native-async-storage/async-storage)
+Environment variables
